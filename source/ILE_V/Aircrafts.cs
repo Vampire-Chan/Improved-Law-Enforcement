@@ -43,17 +43,16 @@ namespace ILE_V
         //Only FIB/IAA/POLICE and LOCAL POLICE
         public void OfficerHeli()
         {
-            ConfigLoader.LoadValues();
             if (helialive == false)
             {
                 helialive = true;
-                Vehicle heli = Helpers.SpawnVehicle(ConfigLoader.HELICOPTERS[rand.Next(0, ConfigLoader.HELICOPTERS.Length)], Game.Player.Character.Position.Around(160) + Vector3.WorldUp * 70, ConfigLoader.DEBUGGING);
+                Vehicle heli = Helpers.SpawnVehicle(ConfigLoader.HELICOPTERS[rand.Next(0, ConfigLoader.HELICOPTERS.Length)]);
 
                 heli.LandingGearState = VehicleLandingGearState.Retracted;
-                Helpers.VehicleModifications(heli, "LSPD", ConfigLoader.DEBUGGING);
+                Helpers.VehicleModifications(heli, "LSPD");
                 for (int i = -1; i < heli.PassengerCapacity; i++)
                 {
-                    var p1 = Helpers.SpawnPed(ConfigLoader.IAA_OFFICERS[rand.Next(0, ConfigLoader.IAA_OFFICERS.Length)], Game.Player.Character.ForwardVector * 160, ConfigLoader.DEBUGGING);
+                    var p1 = Helpers.SpawnPed(ConfigLoader.IAA_OFFICERS[rand.Next(0, ConfigLoader.IAA_OFFICERS.Length)]);
                     p1.Task.WarpIntoVehicle(heli, (VehicleSeat)i);
                 }
                 Ped[] passengers = heli.Occupants;
@@ -70,7 +69,7 @@ namespace ILE_V
                         driver.Task.FleeFrom(Game.Player.Character, 99999999);
                         helialive = false;
                     }
-                    if (heli.IsDead ==true || heli ==null)
+                    if (heli.IsDead == true || heli ==null)
                     {
                         helialive = false;
                     }

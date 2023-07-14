@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -180,49 +181,67 @@ namespace ILE_V
             return array;
         }
 
-        public static Vehicle SpawnVehicle(String car, Vector3 v, bool logg)
+        public static Vehicle SpawnVehicle(String car)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
             Vehicle veh;
-            veh = World.CreateVehicle(RequestModel(car, logg), v);
-            log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + "Y:" + v.Y + "Z:" + v.Z + "]", logg);
-
-            return veh;
+            var v = Game.Player.Character.ForwardVector * 140;
+            Model mdl = RequestModel(car);
+            if (mdl.IsLoaded)
+            {
+                veh = World.CreateVehicle(car, v);
+                log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + "Y:" + v.Y + "Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
+                return veh;
+            }
+            else 
+            log.Error("Spawning Vehicle: [" + car + "] failed because Vehicle failed to load into memory.", ConfigLoader.DEBUGGING);
+            return null;
         }
 
-        public static Ped SpawnPed(String ped, Vector3 v, bool logg)
+        public static Ped SpawnPed(String ped)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
-            var npc = World.CreatePed(RequestModel(ped, logg), v);
-            log.Info("Spawning Ped: [" + ped + "]. The location is: [X:" + v.X + "Y:" + v.Y + "Z:" + v.Z + "]", logg);
-            return npc;
+            var v = Game.Player.Character.ForwardVector * 140;
+            Ped npc;
+            var model = RequestModel(ped); 
+            if (model.IsLoaded)
+            {
+                npc = World.CreatePed(RequestModel(ped), v);
+                log.Info("Spawning Ped: [" + ped + "]. The location is: [X:" + v.X + "Y:" + v.Y + "Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
+                return npc;
+            }
+            else
+                log.Error("Spawning Pedestrain: [" + ped + "] failed because Pedestrain failed to load into memory.", ConfigLoader.DEBUGGING);
+            return null;
         }
 
-        public static Model RequestModel(string mdl, bool logg)
+        public static Model RequestModel(string mdl)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
             Model model = new Model(mdl);
             if (!model.Request(1500))
             {
-                log.Info("Requesting Model: [" + mdl + "] in Memory.", logg);
+                model.Request(2000);
+                log.Info("Requesting Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
 
-                if (model.IsInCdImage && model.IsValid)
+                if (model.IsInCdImage && model.IsValid && model.IsLoaded == false)
                 {
-                    log.Info("Failed to Request Model: [" + mdl + "] in Memory.", logg);
+                    log.Error("Failed to Request Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
                     return null;
                 }
                 if (model.IsInCdImage == false)
                 {
-                    log.Info("Model: [" + mdl + "] failed to load in Memory as it does not exist in Game files.", logg);
+                    log.Fatal("Model: [" + mdl + "] failed to load in Memory as it does not exist in Game files.", ConfigLoader.DEBUGGING);
+                    return null;
                 }
                 return null;
             }
             return model;
         }
-        public static void RequestUnloadModel(Model mdl, bool logg)
+        public static void RequestUnloadModel(Model mdl)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
-            log.Info("Marking Model: [" + mdl + "] to be Disposed off Memory.", logg);
+            log.Info("Marking Model: [" + mdl + "] to be Disposed off Memory.", ConfigLoader.DEBUGGING);
             mdl.MarkAsNoLongerNeeded();
         }
 
@@ -237,10 +256,10 @@ namespace ILE_V
             Function.Call(Hash.SET_PED_RANDOM_PROPS, ped);
             Function.Call(Hash.SET_PED_AS_COP, ped, true);
             ped.MarkAsNoLongerNeeded();
-            log.Info("Ped Functions Applied to: [" + ped.ToString() + "].", ConfigLoader.DEBUGGING);
+            log.Info("Ped Functions Applied to: [" + ped.Model.ToString() + "].", ConfigLoader.DEBUGGING);
         }
 
-        public static void VehicleModifications(Vehicle car, String platetext, bool log)
+        public static void VehicleModifications(Vehicle car, String platetext)
         {
             //InstallModKit
             Function.Call(Hash.SET_VEHICLE_MOD_KIT, car, 0);
@@ -250,40 +269,8 @@ namespace ILE_V
             for (int i=0; i<49; i++)
             {
                 var mods = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, (VehicleModType)i);
-                Function.Call(Hash.SET_VEHICLE_MOD, car, (VehicleModType)i, rand.Next(0, mods), true);
-
+                Function.Call(Hash.SET_VEHICLE_MOD, car, (VehicleModType)i, rand.Next(0, mods), false);
             }
-            /*
-            var spoiler = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Spoilers);
-            var armor = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Armor);
-            var brake = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Brakes);
-            var engine = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Engine);
-            var skirt = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.SideSkirt);
-            var suspense = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Suspension);
-            var bumpf = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.FrontBumper);
-            var bumpr = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.RearBumper);
-            var exhaust = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Exhaust);
-            var frame = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Frame);
-            var grill = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Grille);
-            var horn = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Horns);
-            var hood = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, VehicleModType.Hood);
-
-            //SetMod
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Spoilers, rand.Next(0, spoiler), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Armor, rand.Next(0, armor), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Brakes, rand.Next(0, brake), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Engine, rand.Next(0, engine), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.SideSkirt, rand.Next(0, skirt), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Suspension, rand.Next(0, suspense), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.FrontBumper, rand.Next(0, bumpf), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.RearBumper, rand.Next(0, bumpr), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Exhaust, rand.Next(0, exhaust), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Frame, rand.Next(0, frame), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Grille, rand.Next(0, grill), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Horns, rand.Next(0, horn), true);
-            Function.Call(Hash.SET_VEHICLE_MOD, car, VehicleModType.Hood, rand.Next(0, hood), true);
-            //maybe more? idk
-            */
 
             //SetVehicleTint
             Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, car, (VehicleWindowTint)rand.Next(0, 7));
@@ -302,15 +289,15 @@ namespace ILE_V
         /// <param name="weap">Primary Weapon</param>
         /// <param name="weap2">Sidearm</param>
         /// <param name="givegun">Give a Backup weapon? like sidearm or not.</param>
-        public static void GiveWeaponWithAttachments(Ped ped, String weap, String weap2, bool givegun)
+        public static void GiveWeaponWithAttachments(Ped ped, String weap, String weap2, bool explosive)
         {
-            ped.Weapons.Give(weap, 400, true, true);
+            ped.Weapons.Give(weap2, 100, true, true);
 
-            if (givegun ==true) ped.Weapons.Give(weap2, 100, false, true);
-
+            if (explosive ==true) ped.Weapons.Give(weap, 15, true, true);
+            else ped.Weapons.Give(weap, 400, true, true);
+           
             ped.CanSwitchWeapons = true;
 
-            
             if (ped.Weapons.HasWeapon(WeaponHash.Pistol))
             {
                 Random rand = new Random();
@@ -328,7 +315,7 @@ namespace ILE_V
                 if (a == 0) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.CombatPistol, WeaponComponentHash.CombatPistolClip01);
                 if (a == 1) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.CombatPistol, WeaponComponentHash.CombatPistolClip02);
             }
-
+            /*
             if (ped.Weapons.HasWeapon(WeaponHash.APPistol))
             {
                 Random rand = new Random();
@@ -694,7 +681,7 @@ namespace ILE_V
                 if (a == 0) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.PrecisionRifle, WeaponComponentHash.AssaultRifleClip01);
                 if (a == 1) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.PrecisionRifle, WeaponComponentHash.AssaultRifleClip02);
             }
-		
+		*/
         }
     }
 }

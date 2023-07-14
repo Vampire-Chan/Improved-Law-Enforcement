@@ -42,35 +42,34 @@ namespace ILE_V
 
         public OfficerSpawn()
         {
-            ConfigLoader.LoadValues();
-            //Vehicle Spawns every x Seconds.
-            if (Game.Player.WantedLevel >= 3)
-                Interval = ConfigLoader.SPAWN_GAP + ConfigLoader.SPAWN_GAP / 4;
-            else Interval = ConfigLoader.SPAWN_GAP;
-
             Tick += OnTick;
         }
 
         public void OnTick(object sender, EventArgs e)
         {
+
+            //Vehicle Spawns every x Seconds.
+            if (Game.Player.WantedLevel >= 3)
+                Wait(ConfigLoader.SPAWN_GAP + ConfigLoader.SPAWN_GAP / 4);
+            else Wait(ConfigLoader.SPAWN_GAP);
+
             var wl = Game.Player.WantedLevel;
-            ConfigLoader.LoadValues();
             //Will Keep Spawning all the time.
             Officers(ConfigLoader.DEBUGGING);
-
+            
             //Spawns NOOSE at Star 3
             if (wl == 3)
             {
-                TacticalSpawn.Tactical_NOOSE(ConfigLoader.DEBUGGING);
+                TacticalSpawn.Tactical_NOOSE();
             }
 
             //NOOSE and Either FIB or IAA will Spawn at Star 4
             if (wl ==4)
             {
                 int a = Rand.Next(0, 2);
-                TacticalSpawn.Tactical_NOOSE(ConfigLoader.DEBUGGING);
-                if (a==0)TacticalSpawn.FIB_Officers(ConfigLoader.DEBUGGING);
-                if (a==1)TacticalSpawn.IAA_Officers(ConfigLoader.DEBUGGING);
+                TacticalSpawn.Tactical_NOOSE();
+                if (a==0)TacticalSpawn.FIB_Officers();
+                if (a==1)TacticalSpawn.IAA_Officers();
             }
 
             //Marines, MerryWeather and NOOSE alongside FIB and IAA spawns.
@@ -78,11 +77,11 @@ namespace ILE_V
             {
                 int a = Rand.Next(0, 2);
                 int b = Rand.Next(0, 2);
-                TacticalSpawn.Tactical_NOOSE(ConfigLoader.DEBUGGING);
-                if (a == 0) TacticalSpawn.FIB_Officers(ConfigLoader.DEBUGGING);
-                if (a == 1) TacticalSpawn.IAA_Officers(ConfigLoader.DEBUGGING);
-                if (b == 0) TacticalSpawn.Tactical_MerryWeather(ConfigLoader.DEBUGGING);
-                if (b == 1) TacticalSpawn.Tactical_Marines(ConfigLoader.DEBUGGING);
+                TacticalSpawn.Tactical_NOOSE();
+                if (a == 0) TacticalSpawn.FIB_Officers();
+                if (a == 1) TacticalSpawn.IAA_Officers();
+                if (b == 0) TacticalSpawn.Tactical_MerryWeather();
+                if (b == 1) TacticalSpawn.Tactical_Marines();
             }
         }
 
@@ -166,7 +165,7 @@ namespace ILE_V
                 }
 
             //Spawning Vehicles
-            var car = Helpers.SpawnVehicle(VEHICLE_MODELS[Rand.Next(0, VEHICLE_MODELS.Length)], Game.Player.Character.ForwardVector * 140, log);
+            var car = Helpers.SpawnVehicle(VEHICLE_MODELS[Rand.Next(0, VEHICLE_MODELS.Length)]);
             if (car.Exists() && car != null)
             {
                 var wl = Game.Player.WantedLevel;
@@ -174,8 +173,8 @@ namespace ILE_V
                 //Star 0 and 1. Dogs and Officers with Stungun and Nightstick. 100% Accuracy for Stuns. 
                 if (wl <= 1)
                 {
-                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0,ConfigLoader.POLICE_DOGS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
                     p1.Task.WarpIntoVehicle(car, VehicleSeat.Driver);
                     p2.Task.WarpIntoVehicle(car, VehicleSeat.RightFront);
                     p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
@@ -186,9 +185,9 @@ namespace ILE_V
                 //Star 2 - 20% Accuracy - Dogs/Handguns - (Dog - 2 Officer)
                 if (wl == 2)
                 {
-                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                    var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
+                    var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
                     p1.Task.WarpIntoVehicle(car, VehicleSeat.Driver);
                     p2.Task.WarpIntoVehicle(car, VehicleSeat.LeftRear);
                     p3.Task.WarpIntoVehicle(car, VehicleSeat.RightRear);
@@ -203,10 +202,10 @@ namespace ILE_V
                 //Star 3 - 40% Accuracy - Dogs/Shotguns - (2 Dog - 2 Officer - 10% Armour - Burst Pistol
                 if (wl == 3)
                 {
-                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                    var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                    var p4 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
+                    var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                    var p4 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
                     p1.Task.WarpIntoVehicle(car, VehicleSeat.Driver);
                     p2.Task.WarpIntoVehicle(car, VehicleSeat.LeftRear);
                     p3.Task.WarpIntoVehicle(car, VehicleSeat.RightRear);
@@ -228,8 +227,8 @@ namespace ILE_V
                         Ped p1, p2;
                     for (int i = -1; i < car.PassengerCapacity; i++)
                     {
-                        p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                        p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                        p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                        p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
                         p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                         p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
                     }
@@ -261,8 +260,8 @@ namespace ILE_V
                     { 
                     for (int i = -1; i < car.PassengerCapacity; i++)
                     {
-                        p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], Game.Player.Character.ForwardVector * 160, log);
-                        p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                        p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                        p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
                         p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                         p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
                     }

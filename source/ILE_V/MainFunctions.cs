@@ -20,13 +20,15 @@ namespace ILE_V
         {
             //Scans the PedPool and Stores the peds in array and give them Parachute
             //when in Flying Vehicle.
-
+            
             Ped[] peds = World.GetAllPeds ();
             foreach (var ped in peds)
             {
                 if (ped.IsInFlyingVehicle)
+                {
                     ped.SetConfigFlag(188, true);
                     ped.Weapons.Give(WeaponHash.Parachute, 1, false, true);
+                }
             }
 
         }

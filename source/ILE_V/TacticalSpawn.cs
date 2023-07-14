@@ -11,24 +11,24 @@ namespace ILE_V
     {
         public static Random Rand = new Random();
 
-        public static void Tactical_Marines(bool log)
+        public static void Tactical_Marines()
         {
-            ConfigLoader.LoadValues();
-            var car = Helpers.SpawnVehicle(ConfigLoader.MARINE_VEHICLES[Rand.Next(0, ConfigLoader.MARINE_VEHICLES.Length)], Game.Player.Character.ForwardVector * 140, log);
+            var car = Helpers.SpawnVehicle(ConfigLoader.MARINE_VEHICLES[Rand.Next(0, ConfigLoader.MARINE_VEHICLES.Length)]);
             if (car.Exists() && car != null)
             {
-                Helpers.VehicleModifications(car, "MARINES", log);
+                Helpers.VehicleModifications(car, "MARINES");
                 Ped p1;
                 for (int i = -1; i < car.PassengerCapacity; i++)
                 {
-                    p1 = Helpers.SpawnPed(ConfigLoader.MARINE_SOLDIERS[Rand.Next(0, ConfigLoader.MARINE_SOLDIERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    p1 = Helpers.SpawnPed(ConfigLoader.MARINE_SOLDIERS[Rand.Next(0, ConfigLoader.MARINE_SOLDIERS.Length)]);
                     p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                 }
                 Ped[] passengers = car.Occupants;
+
+                int weap_exp = Rand.Next(0, 5);
+
                 foreach (var passenger in passengers)
                 {
-                    int weap_exp = Rand.Next(0, 5);
-
                     //Explosives
                     if (weap_exp >= 3 && weap_exp <= 4)
                     {
@@ -44,17 +44,16 @@ namespace ILE_V
                 }
             }
         }
-        public static void Tactical_MerryWeather(bool log)
+        public static void Tactical_MerryWeather()
         {
-            ConfigLoader.LoadValues();
-            var car = Helpers.SpawnVehicle(ConfigLoader.MERRYW_VEHICLES[Rand.Next(0, ConfigLoader.MERRYW_VEHICLES.Length)], Game.Player.Character.ForwardVector * 140, log);
+            var car = Helpers.SpawnVehicle(ConfigLoader.MERRYW_VEHICLES[Rand.Next(0, ConfigLoader.MERRYW_VEHICLES.Length)]);
             if (car.Exists() && car != null)
             {
-                Helpers.VehicleModifications(car, "BLACKOPS", log);
+                Helpers.VehicleModifications(car, "BLACKOPS");
                 Ped p1;
                 for (int i = -1; i < car.PassengerCapacity; i++)
                 {
-                    p1 = Helpers.SpawnPed(ConfigLoader.MERRYW_SOLDIERS[Rand.Next(0, ConfigLoader.MERRYW_SOLDIERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    p1 = Helpers.SpawnPed(ConfigLoader.MERRYW_SOLDIERS[Rand.Next(0, ConfigLoader.MERRYW_SOLDIERS.Length)]);
                     p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                 }
                 Ped[] passengers = car.Occupants;
@@ -78,17 +77,16 @@ namespace ILE_V
             }
         }
 
-        public static void Tactical_NOOSE(bool log)
+        public static void Tactical_NOOSE()
         {
-            ConfigLoader.LoadValues();
-            var car = Helpers.SpawnVehicle(ConfigLoader.NOOSE_VEHICLES[Rand.Next(0, ConfigLoader.NOOSE_VEHICLES.Length)], Game.Player.Character.ForwardVector * 140, log);
+            var car = Helpers.SpawnVehicle(ConfigLoader.NOOSE_VEHICLES[Rand.Next(0, ConfigLoader.NOOSE_VEHICLES.Length)]);
             if (car.Exists() && car != null)
             {
-                Helpers.VehicleModifications(car, "NOOSE", log);
+                Helpers.VehicleModifications(car, "NOOSE");
                 Ped p1;
                 for (int i = -1; i < car.PassengerCapacity; i++)
                 {
-                    p1 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    p1 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
                     p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                 }
                 Ped[] passengers = car.Occupants;
@@ -100,17 +98,16 @@ namespace ILE_V
             }
         }
 
-        public static void IAA_Officers(bool log)
+        public static void IAA_Officers()
         {
-            ConfigLoader.LoadValues();
-            var car = Helpers.SpawnVehicle(ConfigLoader.IAA_VEHICLES[Rand.Next(0, ConfigLoader.IAA_VEHICLES.Length)], Game.Player.Character.ForwardVector * 140, log);
+            var car = Helpers.SpawnVehicle(ConfigLoader.IAA_VEHICLES[Rand.Next(0, ConfigLoader.IAA_VEHICLES.Length)]);
             if (car.Exists() && car != null)
             {
-                Helpers.VehicleModifications(car, "IAA", log);
+                Helpers.VehicleModifications(car, "IAA");
                 Ped p1;
                 for (int i = -1; i < car.PassengerCapacity; i++)
                 {
-                    p1 = Helpers.SpawnPed(ConfigLoader.IAA_OFFICERS[Rand.Next(0, ConfigLoader.IAA_OFFICERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    p1 = Helpers.SpawnPed(ConfigLoader.IAA_OFFICERS[Rand.Next(0, ConfigLoader.IAA_OFFICERS.Length)]);
                     p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                 }
                 Ped[] passengers = car.Occupants;
@@ -120,19 +117,18 @@ namespace ILE_V
                     Helpers.PedFunctions(passenger, Rand.Next(60, 80), FiringPattern.FullAuto, Rand.Next(150, 200), 200);
                 }
             }
-        }
+        }   
 
-        public static void FIB_Officers(bool log)
+        public static void FIB_Officers()
         {
-            ConfigLoader.LoadValues();
-            var car = Helpers.SpawnVehicle(ConfigLoader.FIB_VEHICLES[Rand.Next(0, ConfigLoader.NOOSE_VEHICLES.Length)], Game.Player.Character.ForwardVector * 140, log);
+            var car = Helpers.SpawnVehicle(ConfigLoader.FIB_VEHICLES[Rand.Next(0, ConfigLoader.NOOSE_VEHICLES.Length)]);
             if (car.Exists() && car != null)
             {
-                Helpers.VehicleModifications(car, "FEDERAL", log);
+                Helpers.VehicleModifications(car, "FEDERAL");
                 Ped p1;
                 for (int i = -1; i < car.PassengerCapacity; i++)
                 {
-                    p1 = Helpers.SpawnPed(ConfigLoader.FIB_OFFICERS[Rand.Next(0, ConfigLoader.FIB_OFFICERS.Length)], Game.Player.Character.ForwardVector * 160, log);
+                    p1 = Helpers.SpawnPed(ConfigLoader.FIB_OFFICERS[Rand.Next(0, ConfigLoader.FIB_OFFICERS.Length)]);
                     p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
                 }
                 Ped[] passengers = car.Occupants;
