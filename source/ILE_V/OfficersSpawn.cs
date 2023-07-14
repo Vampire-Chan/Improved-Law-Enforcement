@@ -55,37 +55,43 @@ namespace ILE_V
 
             var wl = Game.Player.WantedLevel;
             //Will Keep Spawning all the time.
-            Officers(ConfigLoader.DEBUGGING);
-            
+            Officers();
+
             //Spawns NOOSE at Star 3
             if (wl == 3)
             {
+                Wait(200);
                 TacticalSpawn.Tactical_NOOSE();
             }
 
             //NOOSE and Either FIB or IAA will Spawn at Star 4
-            if (wl ==4)
+            if (wl == 4)
             {
-                int a = Rand.Next(0, 2);
+                int a = Rand.Next(0, 2); 
+                Wait(200);
                 TacticalSpawn.Tactical_NOOSE();
-                if (a==0)TacticalSpawn.FIB_Officers();
-                if (a==1)TacticalSpawn.IAA_Officers();
+                Wait(200);
+                if (a == 0) TacticalSpawn.FIB_Officers();
+                if (a == 1) TacticalSpawn.IAA_Officers();
             }
 
             //Marines, MerryWeather and NOOSE alongside FIB and IAA spawns.
-            if (wl ==5)
+            if (wl == 5)
             {
                 int a = Rand.Next(0, 2);
-                int b = Rand.Next(0, 2);
-                TacticalSpawn.Tactical_NOOSE();
+                int b = Rand.Next(0, 2); 
+                Wait(200);
+                TacticalSpawn.Tactical_NOOSE(); 
+                Wait(200);
                 if (a == 0) TacticalSpawn.FIB_Officers();
-                if (a == 1) TacticalSpawn.IAA_Officers();
+                if (a == 1) TacticalSpawn.IAA_Officers(); 
+                Wait(200);
                 if (b == 0) TacticalSpawn.Tactical_MerryWeather();
                 if (b == 1) TacticalSpawn.Tactical_Marines();
             }
         }
 
-        public static void Officers(bool log)
+        public static void Officers()
         {
             //Get Zone Name using GetJurisdiction()
             string[] CURRENT_AREA = Zones.GetJurisdiction(Game.Player.Character.Position);
@@ -102,7 +108,7 @@ namespace ILE_V
             //Joint Operation by LG and CG. Beach
             if (CURRENT_AREA.SequenceEqual(Zones.BEACH))
             {
-                if (Game.Player.WantedLevel >=3 )
+                if (Game.Player.WantedLevel >= 3)
                 {
                     PED_MODELS = ConfigLoader.LIFEGUARDS.Concat(ConfigLoader.COASTGUARDS).ToArray();
                     VEHICLE_MODELS = ConfigLoader.LIFEGUARD_VEHICLES.Concat(ConfigLoader.COASTGUARD_VEHICLES).ToArray();
@@ -111,7 +117,7 @@ namespace ILE_V
                 {
                     PED_MODELS = ConfigLoader.COASTGUARDS;
                     VEHICLE_MODELS = ConfigLoader.COASTGUARD_VEHICLES;
-                }   
+                }
             }
             if (CURRENT_AREA.SequenceEqual(Zones.BCSO))
             {
@@ -143,33 +149,33 @@ namespace ILE_V
                 PED_MODELS = ConfigLoader.NOOSE_SOLDIERS;
                 VEHICLE_MODELS = ConfigLoader.NOOSE_VEHICLES;
             }
-                if (CURRENT_AREA.SequenceEqual(Zones.SAHP))
-                {
-                    PED_MODELS = ConfigLoader.POLICE_OFFICERS_SAHP;
-                    VEHICLE_MODELS = ConfigLoader.POLICE_VEHICLES_SAHP;
-                }
-                if (CURRENT_AREA.SequenceEqual(Zones.SAPR))
-                {
-                    PED_MODELS = ConfigLoader.POLICE_OFFICERS_SAPR;
-                    VEHICLE_MODELS = ConfigLoader.POLICE_VEHICLES_SAPR;
-                }
-                if (CURRENT_AREA.SequenceEqual(Zones.SASPR))
-                {
-                    PED_MODELS = ConfigLoader.NOOSE_SOLDIERS;
-                    VEHICLE_MODELS = ConfigLoader.NOOSE_VEHICLES;
-                }
-                if (CURRENT_AREA.SequenceEqual(Zones.ZANCUDO))
-                {
-                    PED_MODELS = ConfigLoader.MARINE_SOLDIERS;
-                    VEHICLE_MODELS = ConfigLoader.MARINE_VEHICLES;
-                }
+            if (CURRENT_AREA.SequenceEqual(Zones.SAHP))
+            {
+                PED_MODELS = ConfigLoader.POLICE_OFFICERS_SAHP;
+                VEHICLE_MODELS = ConfigLoader.POLICE_VEHICLES_SAHP;
+            }
+            if (CURRENT_AREA.SequenceEqual(Zones.SAPR))
+            {
+                PED_MODELS = ConfigLoader.POLICE_OFFICERS_SAPR;
+                VEHICLE_MODELS = ConfigLoader.POLICE_VEHICLES_SAPR;
+            }
+            if (CURRENT_AREA.SequenceEqual(Zones.SASPR))
+            {
+                PED_MODELS = ConfigLoader.NOOSE_SOLDIERS;
+                VEHICLE_MODELS = ConfigLoader.NOOSE_VEHICLES;
+            }
+            if (CURRENT_AREA.SequenceEqual(Zones.ZANCUDO))
+            {
+                PED_MODELS = ConfigLoader.MARINE_SOLDIERS;
+                VEHICLE_MODELS = ConfigLoader.MARINE_VEHICLES;
+            }
 
             //Spawning Vehicles
             var car = Helpers.SpawnVehicle(VEHICLE_MODELS[Rand.Next(0, VEHICLE_MODELS.Length)]);
             if (car.Exists() && car != null)
             {
                 var wl = Game.Player.WantedLevel;
-
+                Helpers.VehicleModifications(car, "POLICE");
                 //Star 0 and 1. Dogs and Officers with Stungun and Nightstick. 100% Accuracy for Stuns. 
                 if (wl <= 1)
                 {
@@ -197,8 +203,8 @@ namespace ILE_V
                     Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 100);
                     Helpers.GiveWeaponWithAttachments(p3, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
                     Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
-
                 }
+
                 //Star 3 - 40% Accuracy - Dogs/Shotguns - (2 Dog - 2 Officer - 10% Armour - Burst Pistol
                 if (wl == 3)
                 {
@@ -213,7 +219,7 @@ namespace ILE_V
                     Helpers.PedFunctions(p1, 40, FiringPattern.BurstFirePistol, 30, 125);
                     Helpers.PedFunctions(p3, 40, FiringPattern.BurstFirePistol, 30, 125);
                     Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 120);
-                    p1.DrivingStyle = DrivingStyle.Rushed; 
+                    p1.DrivingStyle = DrivingStyle.Rushed;
                     Helpers.PedFunctions(p4, 100, FiringPattern.Default, 0, 125);
                     Helpers.GiveWeaponWithAttachments(p3, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
                     Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
@@ -225,48 +231,48 @@ namespace ILE_V
                     if (car.PassengerCapacity == 8)
                     {
                         Ped p1, p2;
-                    for (int i = -1; i < car.PassengerCapacity; i++)
-                    {
-                        p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                        p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
-                        p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
-                        p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
-                    }
+                        for (int i = -1; i < car.PassengerCapacity; i++)
+                        {
+                            p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                            p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
+                            p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
+                            p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
+                        }
 
-                    Ped[] passengers = car.Occupants;
-                    foreach (var passenger in passengers)
-                    {
-                        //Tacticals Hanging
-                        if (passenger.Model == "S_M_Y_SWAT_01")
+                        Ped[] passengers = car.Occupants;
+                        foreach (var passenger in passengers)
                         {
-                            Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.NOOSE_WEAPON[Rand.Next(0, ConfigLoader.NOOSE_WEAPON.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                            Helpers.PedFunctions(passenger, Rand.Next(60, 90), FiringPattern.FullAuto, Rand.Next(130, 160), 200);
+                            //Tacticals Hanging
+                            if (passenger.Model == "S_M_Y_SWAT_01")
+                            {
+                                Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.NOOSE_WEAPON[Rand.Next(0, ConfigLoader.NOOSE_WEAPON.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
+                                Helpers.PedFunctions(passenger, Rand.Next(60, 90), FiringPattern.FullAuto, Rand.Next(130, 160), 200);
+                            }
+                            //Officers Inside
+                            else
+                            {
+                                Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.POLICE_WEAPON_HEAVY[Rand.Next(0, ConfigLoader.POLICE_WEAPON_HEAVY.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
+                                Helpers.PedFunctions(passenger, Rand.Next(40, 60), FiringPattern.BurstFireRifle, 70, 200);
+                            }
                         }
-                        //Officers Inside
-                        else
-                        {
-                            Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.POLICE_WEAPON_HEAVY[Rand.Next(0, ConfigLoader.POLICE_WEAPON_HEAVY.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                            Helpers.PedFunctions(passenger, Rand.Next(40, 60), FiringPattern.BurstFireRifle, 70, 200);
-                        }
-                    }
                     }
                 }
-            
+
                 //Star 5 - 80-100% Accuracy - Rifles/Shotguns 
                 if (wl == 5)
                 {
                     Ped p1, p2;
-                    if (car.PassengerCapacity ==8)
-                    { 
-                    for (int i = -1; i < car.PassengerCapacity; i++)
+                    if (car.PassengerCapacity == 8)
                     {
-                        p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                        p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
-                        p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
-                        p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
-                    }
+                        for (int i = -1; i < car.PassengerCapacity; i++)
+                        {
+                            p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
+                            p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
+                            p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
+                            p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
+                        }
 
-                    Ped[] passengers = car.Occupants;
+                        Ped[] passengers = car.Occupants;
                         foreach (var passenger in passengers)
                         {
                             //Tacticals Hanging

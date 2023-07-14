@@ -185,12 +185,19 @@ namespace ILE_V
         {
             Logger log = new Logger("./scripts/ILE_V.log");
             Vehicle veh;
-            var v = Game.Player.Character.ForwardVector * 140;
-            Model mdl = RequestModel(car);
+            Vector3 v;
+            Model mdl = new Model(car);
+            mdl = RequestModel(car);
+            if (mdl.IsHelicopter== true)
+            {
+                v = Game.Player.Character.AbovePosition + Game.Player.Character.Position.Around ( 100);
+            }
+            else v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 80;
+
             if (mdl.IsLoaded)
             {
                 veh = World.CreateVehicle(car, v);
-                log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + "Y:" + v.Y + "Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
+                log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
                 return veh;
             }
             else 
@@ -201,13 +208,14 @@ namespace ILE_V
         public static Ped SpawnPed(String ped)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
-            var v = Game.Player.Character.ForwardVector * 140;
+            var v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 140;
             Ped npc;
             var model = RequestModel(ped); 
+
             if (model.IsLoaded)
             {
                 npc = World.CreatePed(RequestModel(ped), v);
-                log.Info("Spawning Ped: [" + ped + "]. The location is: [X:" + v.X + "Y:" + v.Y + "Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
+                log.Info("Spawning Ped: [" + ped + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
                 return npc;
             }
             else
@@ -219,21 +227,22 @@ namespace ILE_V
         {
             Logger log = new Logger("./scripts/ILE_V.log");
             Model model = new Model(mdl);
-            if (!model.Request(1500))
-            {
-                model.Request(2000);
-                log.Info("Requesting Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
 
-                if (model.IsInCdImage && model.IsValid && model.IsLoaded == false)
-                {
-                    log.Error("Failed to Request Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
-                    return null;
-                }
-                if (model.IsInCdImage == false)
-                {
-                    log.Fatal("Model: [" + mdl + "] failed to load in Memory as it does not exist in Game files.", ConfigLoader.DEBUGGING);
-                    return null;
-                }
+            model.Request();
+            log.Info("Requesting Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
+            while (!model.IsLoaded)
+            {
+                Script.Wait(200);
+            }
+
+            if (model.IsInCdImage && model.IsValid && model.IsLoaded == false)
+            {
+                log.Error("Failed to Request Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
+                return null;
+            }
+            if (model.IsInCdImage == false)
+            {
+                log.Fatal("Model: [" + mdl + "] failed to load in Memory as it does not exist in Game files.", ConfigLoader.DEBUGGING);
                 return null;
             }
             return model;
@@ -256,6 +265,7 @@ namespace ILE_V
             Function.Call(Hash.SET_PED_RANDOM_PROPS, ped);
             Function.Call(Hash.SET_PED_AS_COP, ped, true);
             ped.MarkAsNoLongerNeeded();
+            ped.Task.GoTo(Game.Player.Character.Position);
             log.Info("Ped Functions Applied to: [" + ped.Model.ToString() + "].", ConfigLoader.DEBUGGING);
         }
 
@@ -277,7 +287,7 @@ namespace ILE_V
 
             //NumberPlate
             Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT, car, platetext);
-
+            car.PlaceOnNextStreet();
             car.MarkAsNoLongerNeeded();
 
         }

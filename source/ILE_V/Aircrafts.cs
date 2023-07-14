@@ -26,15 +26,15 @@ namespace ILE_V
             var wl = Game.Player.WantedLevel;
             if (wl >= 3)
             {
-                OfficerHeli();
+                //OfficerHeli();
             }
             if (wl >= 4)
             {
-                TacticalHeli();
+                //TacticalHeli();
             }
             if (wl == 5)
             {
-                Planes();
+                //Planes();
             }
         }
 
