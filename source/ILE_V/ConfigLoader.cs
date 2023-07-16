@@ -87,7 +87,7 @@ namespace ILE_V
             IAA_OFFICERS = Helpers.ToArray(IniFile.GetValue("IAA OFFICERS", "UNITS", "s_m_m_ciasec_01, S_M_Y_SWAT_01"));
             MARINE_SOLDIERS = Helpers.ToArray(IniFile.GetValue("MARINE SOLDIERS", "UNITS", "s_m_m_marine_01, s_m_m_marine_02, s_m_y_marine_01, s_m_y_marine_02, s_m_y_marine_03"));
             MERRYW_SOLDIERS = Helpers.ToArray(IniFile.GetValue("MERRYWEATHER SOLDIERS", "UNITS", "s_m_y_blackops_01, s_m_y_blackops_02, s_m_y_blackops_03, s_m_m_chemsec_01"));
-            POLICE_DOGS = Helpers.ToArray(IniFile.GetValue("POLICE DOGS", "UNITS", "a_c_husky, a_c_pug, a_c_retriever, , a_c_rottweiler, a_c_shepherd"));
+            POLICE_DOGS = Helpers.ToArray(IniFile.GetValue("POLICE DOGS", "UNITS", "A_C_shepherd, A_C_Retriever, A_C_Rottweiler, A_C_Husky"));
             LIFEGUARDS = Helpers.ToArray(IniFile.GetValue("LIFE GUARDS", "UNITS", "s_f_y_baywatch_01, s_m_y_baywatch_01"));
             COASTGUARDS = Helpers.ToArray(IniFile.GetValue("COAST GUARDS", "UNITS", "s_m_y_uscg_01, s_m_y_baywatch_01, s_m_y_cop_01"));
 

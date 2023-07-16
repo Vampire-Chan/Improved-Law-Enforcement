@@ -1,0 +1,9 @@
+E:\Projects\ILE_V\obj\Debug\ILE_V.csproj.AssemblyReference.cache
+E:\Projects\ILE_V\obj\Debug\ILE_V.csproj.CoreCompileInputs.cache
+E:\Projects\ILE_V\bin\Debug\ILE_V.dll
+E:\Projects\ILE_V\bin\Debug\ILE_V.pdb
+E:\Projects\ILE_V\bin\Debug\ScriptHookVDotNet3.dll
+E:\Projects\ILE_V\bin\Debug\ScriptHookVDotNet3.xml
+E:\Projects\ILE_V\obj\Debug\ILE_V.csproj.CopyComplete
+E:\Projects\ILE_V\obj\Debug\ILE_V.dll
+E:\Projects\ILE_V\obj\Debug\ILE_V.pdb

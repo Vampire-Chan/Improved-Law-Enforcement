@@ -53,7 +53,6 @@
     <Compile Include="ConfigLoader.cs" />
     <Compile Include="ConfigReader.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="MainFunctions.cs" />
     <Compile Include="TacticalSpawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OfficersSpawn.cs" />

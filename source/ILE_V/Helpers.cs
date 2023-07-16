@@ -188,11 +188,22 @@ namespace ILE_V
             Vector3 v;
             Model mdl = new Model(car);
             mdl = RequestModel(car);
-            if (mdl.IsHelicopter== true)
+
+            if (mdl.IsHelicopter == true)
             {
-                v = Game.Player.Character.AbovePosition + Game.Player.Character.Position.Around ( 100);
+                v = Game.Player.Character.AbovePosition + Game.Player.Character.Position.Around(100);
             }
-            else v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 80;
+            else
+            {
+                if (Game.Player.Character.IsOnFoot == true)
+                {
+                    v = Game.Player.Character.Position.Around(130);
+                }
+                else
+                {
+                    v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 80;
+                }
+            }
 
             if (mdl.IsLoaded)
             {
@@ -200,17 +211,17 @@ namespace ILE_V
                 log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
                 return veh;
             }
-            else 
-            log.Error("Spawning Vehicle: [" + car + "] failed because Vehicle failed to load into memory.", ConfigLoader.DEBUGGING);
+            else
+                log.Error("Spawning Vehicle: [" + car + "] failed because Vehicle failed to load into memory.", ConfigLoader.DEBUGGING);
             return null;
         }
 
         public static Ped SpawnPed(String ped)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
-            var v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 140;
+            var v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 355;
             Ped npc;
-            var model = RequestModel(ped); 
+            var model = RequestModel(ped);
 
             if (model.IsLoaded)
             {
@@ -223,16 +234,35 @@ namespace ILE_V
             return null;
         }
 
+        public static Ped SpawnPed(String ped, Vehicle car, VehicleSeat seat)
+        {
+            Logger log = new Logger("./scripts/ILE_V.log");
+            var v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 140;
+            Ped npc;
+            var model = RequestModel(ped);
+
+            if (model.IsLoaded)
+            {
+                npc = car.CreatePedOnSeat(seat, RequestModel(ped));
+                log.Info("Spawning Ped: [" + ped + "] inside Vehicle", ConfigLoader.DEBUGGING);
+                return npc;
+            }
+            else
+                log.Error("Spawning Pedestrain: [" + ped + "] failed because Pedestrain failed to load into memory.", ConfigLoader.DEBUGGING);
+            return null;
+        }
+
         public static Model RequestModel(string mdl)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
             Model model = new Model(mdl);
 
-            model.Request();
             log.Info("Requesting Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
-            while (!model.IsLoaded)
+
+
+            if (model.IsValid == true && model.IsInCdImage == true)
             {
-                Script.Wait(200);
+                model.Request(5000);
             }
 
             if (model.IsInCdImage && model.IsValid && model.IsLoaded == false)
@@ -247,6 +277,7 @@ namespace ILE_V
             }
             return model;
         }
+
         public static void RequestUnloadModel(Model mdl)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
@@ -265,7 +296,6 @@ namespace ILE_V
             Function.Call(Hash.SET_PED_RANDOM_PROPS, ped);
             Function.Call(Hash.SET_PED_AS_COP, ped, true);
             ped.MarkAsNoLongerNeeded();
-            ped.Task.GoTo(Game.Player.Character.Position);
             log.Info("Ped Functions Applied to: [" + ped.Model.ToString() + "].", ConfigLoader.DEBUGGING);
         }
 
@@ -276,7 +306,7 @@ namespace ILE_V
 
             //GetNumMod
 
-            for (int i=0; i<49; i++)
+            for (int i = 0; i < 49; i++)
             {
                 var mods = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, (VehicleModType)i);
                 Function.Call(Hash.SET_VEHICLE_MOD, car, (VehicleModType)i, rand.Next(0, mods), false);
@@ -288,6 +318,8 @@ namespace ILE_V
             //NumberPlate
             Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT, car, platetext);
             car.PlaceOnNextStreet();
+            car.IsEngineRunning = true;
+            car.Speed = 30;
             car.MarkAsNoLongerNeeded();
 
         }
@@ -303,9 +335,9 @@ namespace ILE_V
         {
             ped.Weapons.Give(weap2, 100, true, true);
 
-            if (explosive ==true) ped.Weapons.Give(weap, 15, true, true);
+            if (explosive == true) ped.Weapons.Give(weap, 15, true, true);
             else ped.Weapons.Give(weap, 400, true, true);
-           
+
             ped.CanSwitchWeapons = true;
 
             if (ped.Weapons.HasWeapon(WeaponHash.Pistol))
@@ -316,7 +348,7 @@ namespace ILE_V
                 if (a == 0) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.Pistol, WeaponComponentHash.PistolClip01);
                 if (a == 1) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.Pistol, WeaponComponentHash.PistolClip02);
             }
-        
+
             if (ped.Weapons.HasWeapon(WeaponHash.CombatPistol))
             {
                 Random rand = new Random();

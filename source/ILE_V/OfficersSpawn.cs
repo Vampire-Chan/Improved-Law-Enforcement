@@ -47,7 +47,6 @@ namespace ILE_V
 
         public void OnTick(object sender, EventArgs e)
         {
-
             //Vehicle Spawns every x Seconds.
             if (Game.Player.WantedLevel >= 3)
                 Wait(ConfigLoader.SPAWN_GAP + ConfigLoader.SPAWN_GAP / 4);
@@ -67,7 +66,7 @@ namespace ILE_V
             //NOOSE and Either FIB or IAA will Spawn at Star 4
             if (wl == 4)
             {
-                int a = Rand.Next(0, 2); 
+                int a = Rand.Next(0, 2);
                 Wait(200);
                 TacticalSpawn.Tactical_NOOSE();
                 Wait(200);
@@ -79,12 +78,12 @@ namespace ILE_V
             if (wl == 5)
             {
                 int a = Rand.Next(0, 2);
-                int b = Rand.Next(0, 2); 
+                int b = Rand.Next(0, 2);
                 Wait(200);
-                TacticalSpawn.Tactical_NOOSE(); 
+                TacticalSpawn.Tactical_NOOSE();
                 Wait(200);
                 if (a == 0) TacticalSpawn.FIB_Officers();
-                if (a == 1) TacticalSpawn.IAA_Officers(); 
+                if (a == 1) TacticalSpawn.IAA_Officers();
                 Wait(200);
                 if (b == 0) TacticalSpawn.Tactical_MerryWeather();
                 if (b == 1) TacticalSpawn.Tactical_Marines();
@@ -176,84 +175,113 @@ namespace ILE_V
             {
                 var wl = Game.Player.WantedLevel;
                 Helpers.VehicleModifications(car, "POLICE");
+
+
                 //Star 0 and 1. Dogs and Officers with Stungun and Nightstick. 100% Accuracy for Stuns. 
                 if (wl <= 1)
                 {
-                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
-                    p1.Task.WarpIntoVehicle(car, VehicleSeat.Driver);
-                    p2.Task.WarpIntoVehicle(car, VehicleSeat.RightFront);
-                    p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
-                    Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
-                    Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 80);
-                    Helpers.GiveWeaponWithAttachments(p1, "WEAPON_STUNGUN", "WEAPON_NIGHTSTICK", true);
+                    if (car.PassengerCapacity == 1)
+                    {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
+                        Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.GiveWeaponWithAttachments(p1, "WEAPON_STUNGUN", "WEAPON_NIGHTSTICK", false);
+                    }
+                    else
+                    {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], car, VehicleSeat.RightFront);
+                        p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
+                        Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 80);
+                        Helpers.GiveWeaponWithAttachments(p1, "WEAPON_STUNGUN", "WEAPON_NIGHTSTICK", false);
+                    }
                 }
+
                 //Star 2 - 20% Accuracy - Dogs/Handguns - (Dog - 2 Officer)
                 if (wl == 2)
                 {
-                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
-                    var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                    p1.Task.WarpIntoVehicle(car, VehicleSeat.Driver);
-                    p2.Task.WarpIntoVehicle(car, VehicleSeat.LeftRear);
-                    p3.Task.WarpIntoVehicle(car, VehicleSeat.RightRear);
-                    p1.DrivingStyle = DrivingStyle.AvoidTraffic;
-                    Helpers.PedFunctions(p1, 20, FiringPattern.SingleShot, 10, 125);
-                    Helpers.PedFunctions(p3, 20, FiringPattern.SingleShot, 10, 125);
-                    Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 100);
-                    Helpers.GiveWeaponWithAttachments(p3, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
-                    Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                    if (car.PassengerCapacity == 1)
+                    {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
+                        Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                    }
+                    else
+                    {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], car, VehicleSeat.RightFront);
+                        var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.LeftRear);
+                        p1.DrivingStyle = DrivingStyle.AvoidTraffic;
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.PedFunctions(p1, 20, FiringPattern.BurstFirePistol, 10, 125);
+                        Helpers.PedFunctions(p3, 20, FiringPattern.BurstFirePistol, 10, 125);
+                        Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 100);
+                        Helpers.GiveWeaponWithAttachments(p3, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                        Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                    }
                 }
 
                 //Star 3 - 40% Accuracy - Dogs/Shotguns - (2 Dog - 2 Officer - 10% Armour - Burst Pistol
                 if (wl == 3)
                 {
-                    var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                    var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
-                    var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                    var p4 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)]);
-                    p1.Task.WarpIntoVehicle(car, VehicleSeat.Driver);
-                    p2.Task.WarpIntoVehicle(car, VehicleSeat.LeftRear);
-                    p3.Task.WarpIntoVehicle(car, VehicleSeat.RightRear);
-                    p4.Task.WarpIntoVehicle(car, VehicleSeat.LeftRear);
-                    Helpers.PedFunctions(p1, 40, FiringPattern.BurstFirePistol, 30, 125);
-                    Helpers.PedFunctions(p3, 40, FiringPattern.BurstFirePistol, 30, 125);
-                    Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 120);
-                    p1.DrivingStyle = DrivingStyle.Rushed;
-                    Helpers.PedFunctions(p4, 100, FiringPattern.Default, 0, 125);
-                    Helpers.GiveWeaponWithAttachments(p3, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                    Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-
+                    if (car.PassengerCapacity == 1)
+                    {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
+                        Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                    }
+                    else
+                    {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        var p2 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], car, VehicleSeat.RightFront);
+                        var p3 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.LeftRear);
+                        var p4 = Helpers.SpawnPed(ConfigLoader.POLICE_DOGS[Rand.Next(0, ConfigLoader.POLICE_DOGS.Length)], car, VehicleSeat.RightRear);
+                        Helpers.PedFunctions(p1, 40, FiringPattern.BurstFirePistol, 30, 125);
+                        Helpers.PedFunctions(p3, 40, FiringPattern.BurstFirePistol, 30, 125);
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.PedFunctions(p2, 100, FiringPattern.Default, 0, 120);
+                        p1.DrivingStyle = DrivingStyle.Rushed;
+                        Helpers.PedFunctions(p4, 100, FiringPattern.Default, 0, 125);
+                        Helpers.GiveWeaponWithAttachments(p3, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
+                        Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
+                    }
                 }
+
                 //Star 4 - 60% Accuracy - Shotguns/Rifles 
                 if (wl == 4)
                 {
-                    if (car.PassengerCapacity == 8)
+                    if (car.PassengerCapacity == 1)
                     {
-                        Ped p1, p2;
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
+                        Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                    }
+                    else
+                    {
+                        Ped p1;
                         for (int i = -1; i < car.PassengerCapacity; i++)
                         {
-                            p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                            p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
-                            p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
-                            p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
-                        }
-
-                        Ped[] passengers = car.Occupants;
-                        foreach (var passenger in passengers)
-                        {
-                            //Tacticals Hanging
-                            if (passenger.Model == "S_M_Y_SWAT_01")
-                            {
-                                Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.NOOSE_WEAPON[Rand.Next(0, ConfigLoader.NOOSE_WEAPON.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                                Helpers.PedFunctions(passenger, Rand.Next(60, 90), FiringPattern.FullAuto, Rand.Next(130, 160), 200);
-                            }
-                            //Officers Inside
-                            else
-                            {
-                                Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.POLICE_WEAPON_HEAVY[Rand.Next(0, ConfigLoader.POLICE_WEAPON_HEAVY.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                                Helpers.PedFunctions(passenger, Rand.Next(40, 60), FiringPattern.BurstFireRifle, 70, 200);
-                            }
+                            p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, (VehicleSeat)i);
+                            Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_HEAVY[Rand.Next(0, ConfigLoader.POLICE_WEAPON_HEAVY.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
+                            Helpers.PedFunctions(p1, Rand.Next(40, 60), FiringPattern.BurstFireRifle, 70, 200);
+                            var driver = car.Driver;
+                            driver.Task.GoTo(Game.Player.Character.Position);
                         }
                     }
                 }
@@ -261,32 +289,25 @@ namespace ILE_V
                 //Star 5 - 80-100% Accuracy - Rifles/Shotguns 
                 if (wl == 5)
                 {
-                    Ped p1, p2;
-                    if (car.PassengerCapacity == 8)
+                    if (car.PassengerCapacity == 1)
                     {
+                        var p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, VehicleSeat.Driver);
+                        p1.DrivingStyle = DrivingStyle.SometimesOvertakeTraffic;
+                        Helpers.PedFunctions(p1, 100, FiringPattern.Default, 0, 125);
+                        var driver = car.Driver;
+                        driver.Task.GoTo(Game.Player.Character.Position);
+                        Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_LIGHT[Rand.Next(0, ConfigLoader.POLICE_WEAPON_LIGHT.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], false);
+                    }
+                    else
+                    {
+                        Ped p1;
                         for (int i = -1; i < car.PassengerCapacity; i++)
                         {
-                            p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)]);
-                            p2 = Helpers.SpawnPed(ConfigLoader.NOOSE_SOLDIERS[Rand.Next(0, ConfigLoader.NOOSE_SOLDIERS.Length)]);
-                            p1.Task.WarpIntoVehicle(car, (VehicleSeat)i);
-                            p2.Task.WarpIntoVehicle(car, (VehicleSeat)(i + 4));
-                        }
-
-                        Ped[] passengers = car.Occupants;
-                        foreach (var passenger in passengers)
-                        {
-                            //Tacticals Hanging
-                            if (passenger.Model.ToString() == "S_M_Y_SWAT_01")
-                            {
-                                Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.NOOSE_WEAPON[Rand.Next(0, ConfigLoader.NOOSE_WEAPON.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                                Helpers.PedFunctions(passenger, Rand.Next(80, 100), FiringPattern.FullAuto, Rand.Next(150, 200), 200);
-                            }
-                            //Officers Inside
-                            else
-                            {
-                                Helpers.GiveWeaponWithAttachments(passenger, ConfigLoader.POLICE_WEAPON_HEAVY[Rand.Next(0, ConfigLoader.POLICE_WEAPON_HEAVY.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
-                                Helpers.PedFunctions(passenger, Rand.Next(70, 90), FiringPattern.BurstFireRifle, 100, 200);
-                            }
+                            p1 = Helpers.SpawnPed(PED_MODELS[Rand.Next(0, PED_MODELS.Length)], car, (VehicleSeat)i);
+                            Helpers.GiveWeaponWithAttachments(p1, ConfigLoader.POLICE_WEAPON_HEAVY[Rand.Next(0, ConfigLoader.POLICE_WEAPON_HEAVY.Length)], ConfigLoader.SIDEARMS[Rand.Next(0, ConfigLoader.SIDEARMS.Length)], true);
+                            Helpers.PedFunctions(p1, Rand.Next(70, 90), FiringPattern.BurstFireRifle, 100, 200);
+                            var driver = car.Driver;
+                            driver.Task.GoTo(Game.Player.Character.Position);
                         }
                     }
                 }
