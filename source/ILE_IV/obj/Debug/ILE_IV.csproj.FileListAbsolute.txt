@@ -1,0 +1,2 @@
+E:\Projects\ILE_IV\obj\Debug\ILE_IV.csproj.AssemblyReference.cache
+E:\Projects\ILE_IV\obj\Debug\ILE_IV.csproj.CoreCompileInputs.cache

@@ -40,9 +40,9 @@ namespace ILE_V
         /// </summary>
         /// <param name="text">Message</param>
         /// <param name="enabled">If log mode is on or off</param>
-        public void Debug(string text, bool enabled)
+        public void Debug(string text)
         {
-            if (enabled == true)
+            if (ConfigLoader.DEBUGGING == true)
                 WriteFormattedLog(LogLevel.DEBUG, text);
 
         }
@@ -52,9 +52,9 @@ namespace ILE_V
         /// </summary>
         /// <param name="text">Message</param>
         /// <param name="enabled">If log mode is on or off</param>
-        public void Error(string text, bool enabled)
+        public void Error(string text)
         {
-            if (enabled == true)
+            if (ConfigLoader.DEBUGGING == true)
                 WriteFormattedLog(LogLevel.ERROR, text);
         }
 
@@ -63,9 +63,9 @@ namespace ILE_V
         /// </summary>
         /// <param name="text">Message</param>
         /// <param name="enabled">If log mode is on or off</param>
-        public void Fatal(string text, bool enabled)
+        public void Fatal(string text)
         {
-            if (enabled == true)
+            if (ConfigLoader.DEBUGGING == true)
                 WriteFormattedLog(LogLevel.FATAL, text);
         }
 
@@ -74,9 +74,9 @@ namespace ILE_V
         /// </summary>
         /// <param name="text">Message</param>
         /// <param name="enabled">If log mode is on or off</param>
-        public void Info(string text, bool enabled)
+        public void Info(string text)
         {
-            if (enabled == true)
+            if (ConfigLoader.DEBUGGING == true)
                 WriteFormattedLog(LogLevel.INFO, text);
         }
 
@@ -85,9 +85,9 @@ namespace ILE_V
         /// </summary>
         /// <param name="text">Message</param>
         /// <param name="enabled">If log mode is on or off</param>
-        public void Trace(string text, bool enabled)
+        public void Trace(string text)
         {
-            if (enabled == true)
+            if (ConfigLoader.DEBUGGING == true)
                 WriteFormattedLog(LogLevel.TRACE, text);
         }
 
@@ -96,9 +96,9 @@ namespace ILE_V
         /// </summary>
         /// <param name="text">Message</param>
         /// <param name="enabled">If log mode is on or off</param>
-        public void Warning(string text, bool enabled)
+        public void Warning(string text)
         {
-            if (enabled == true)
+            if (ConfigLoader.DEBUGGING == true)
                 WriteFormattedLog(LogLevel.WARNING, text);
         }
 
@@ -167,17 +167,21 @@ namespace ILE_V
         }
     }
 
+
     public class Helpers
     {
         public static Random rand = new Random();
 
         public static string[] ToArray(string input)
         {
+            Logger log = new Logger("./scripts/ILE_V.log");
+
             string[] array = input.Split(',');
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = string.Join("", array[i].Split((string[])null, StringSplitOptions.RemoveEmptyEntries));
             }
+            log.Info("Reading String: [" + input + "].");
             return array;
         }
 
@@ -188,31 +192,42 @@ namespace ILE_V
             Vector3 v;
             Model mdl = new Model(car);
             mdl = RequestModel(car);
+            Vector3 vac = Game.Player.Character.ForwardVector * 50;
 
             if (mdl.IsHelicopter == true)
             {
-                v = Game.Player.Character.AbovePosition + Game.Player.Character.Position.Around(100);
+                if (Game.Player.WantedLevel >= 3)
+                    v = Game.Player.Character.UpVector + Game.Player.Character.Position.Around(100) + vac;
+                else 
+                    v = Game.Player.Character.UpVector + Game.Player.Character.Position.Around(100);
             }
             else
             {
                 if (Game.Player.Character.IsOnFoot == true)
                 {
-                    v = Game.Player.Character.Position.Around(130);
+                    if (Game.Player.WantedLevel >= 3)
+                        v =  Game.Player.Character.Position.Around(100) + vac;
+                    else
+                        v = vac + Game.Player.Character.Position.Around(100);
+                   
                 }
                 else
                 {
-                    v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 80;
+                    if (Game.Player.WantedLevel >= 3)
+                        v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 80 + vac;
+                    else 
+                        v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 80;
                 }
             }
 
             if (mdl.IsLoaded)
             {
                 veh = World.CreateVehicle(car, v);
-                log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
+                log.Info("Spawning Vehicle: [" + car + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]");
                 return veh;
             }
             else
-                log.Error("Spawning Vehicle: [" + car + "] failed because Vehicle failed to load into memory.", ConfigLoader.DEBUGGING);
+                log.Error("Spawning Vehicle: [" + car + "] failed because Vehicle failed to load into memory.");
             return null;
         }
 
@@ -222,68 +237,93 @@ namespace ILE_V
             var v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 355;
             Ped npc;
             var model = RequestModel(ped);
-
             if (model.IsLoaded)
             {
                 npc = World.CreatePed(RequestModel(ped), v);
-                log.Info("Spawning Ped: [" + ped + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]", ConfigLoader.DEBUGGING);
+                log.Info("Spawning Ped: [" + ped + "]. The location is: [X:" + v.X + " Y:" + v.Y + " Z:" + v.Z + "]");
                 return npc;
             }
             else
-                log.Error("Spawning Pedestrain: [" + ped + "] failed because Pedestrain failed to load into memory.", ConfigLoader.DEBUGGING);
+                log.Error("Spawning Pedestrain: [" + ped + "] failed because Pedestrain failed to load into memory.");
             return null;
         }
 
+        /// <summary>
+        /// Creates Peds inside vehicle.
+        /// </summary>
+        /// <param name="ped">Ped Model.</param>
+        /// <param name="car">Vehicle Model.</param>
+        /// <param name="seat">Seat ID.</param>
+        /// <returns>Returns Ped.</returns>
         public static Ped SpawnPed(String ped, Vehicle car, VehicleSeat seat)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
-            var v = Game.Player.Character.Position.Around(30) + Game.Player.Character.ForwardVector * 140;
             Ped npc;
-            var model = RequestModel(ped);
 
-            if (model.IsLoaded)
+            var model = RequestModel(ped);
+            if (car != null)
             {
-                npc = car.CreatePedOnSeat(seat, RequestModel(ped));
-                log.Info("Spawning Ped: [" + ped + "] inside Vehicle", ConfigLoader.DEBUGGING);
-                return npc;
+                if (model.IsLoaded && car.Exists())
+                {
+                    npc = car.CreatePedOnSeat(seat, RequestModel(ped));
+                    log.Info("Spawning Ped: [" + ped + "] inside Vehicle");
+                    return npc;
+                }
+                else
+                    log.Error("Spawning Pedestrain: [" + ped + "] failed because Pedestrain failed to load into memory.");
+                return null;
             }
             else
-                log.Error("Spawning Pedestrain: [" + ped + "] failed because Pedestrain failed to load into memory.", ConfigLoader.DEBUGGING);
+                log.Error("Spawning Pedestrain: [" + ped + "] failed because Vehicle [" + car.Model.ToString()+"] found was null.");
             return null;
         }
 
+        /// <summary>
+        /// Request Model from Game into Memory.
+        /// </summary>
+        /// <param name="mdl">Model name.</param>
+        /// <returns>Returns the Model.</returns>
         public static Model RequestModel(string mdl)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
             Model model = new Model(mdl);
 
-            log.Info("Requesting Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
+            log.Info("Requesting Model: [" + mdl + "] in Memory.");
 
-
+            //Checking if Model is Valid or not before requesting.
             if (model.IsValid == true && model.IsInCdImage == true)
             {
-                model.Request(5000);
+                //We will ask the Game to load model in memory.
+                model.Request(1500);
             }
 
+            //Checking if Model is Valid but failed to Load.
             if (model.IsInCdImage && model.IsValid && model.IsLoaded == false)
             {
-                log.Error("Failed to Request Model: [" + mdl + "] in Memory.", ConfigLoader.DEBUGGING);
+                log.Error("Failed to Request Model: [" + mdl + "] in Memory.");
                 return null;
             }
+
+            //Checking if Model exists in Game's RPFs.
             if (model.IsInCdImage == false)
             {
-                log.Fatal("Model: [" + mdl + "] failed to load in Memory as it does not exist in Game files.", ConfigLoader.DEBUGGING);
+                log.Fatal("Model: [" + mdl + "] failed to load in Memory as it does not exist in Game files.");
                 return null;
             }
             return model;
         }
 
+        /// <summary>
+        /// Unload Model from Game memory to free up resources.
+        /// </summary>
+        /// <param name="mdl">Model name.</param>
         public static void RequestUnloadModel(Model mdl)
         {
             Logger log = new Logger("./scripts/ILE_V.log");
-            log.Info("Marking Model: [" + mdl + "] to be Disposed off Memory.", ConfigLoader.DEBUGGING);
+            log.Info("Marking Model: [" + mdl + "] to be Disposed off Memory.");
             mdl.MarkAsNoLongerNeeded();
         }
+
 
         public static void PedFunctions(Ped ped, int accuracy, FiringPattern type, int armour, int health)
         {
@@ -296,7 +336,8 @@ namespace ILE_V
             Function.Call(Hash.SET_PED_RANDOM_PROPS, ped);
             Function.Call(Hash.SET_PED_AS_COP, ped, true);
             ped.MarkAsNoLongerNeeded();
-            log.Info("Ped Functions Applied to: [" + ped.Model.ToString() + "].", ConfigLoader.DEBUGGING);
+            //Function.Call(Hash.Weapon)
+            log.Info("Ped Functions Applied to: [" + ped.Model.ToString() + "].");
         }
 
         public static void VehicleModifications(Vehicle car, String platetext)
@@ -304,28 +345,29 @@ namespace ILE_V
             //InstallModKit
             Function.Call(Hash.SET_VEHICLE_MOD_KIT, car, 0);
 
-            //GetNumMod
-
+            
             for (int i = 0; i < 49; i++)
             {
-                var mods = Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, car, (VehicleModType)i);
-                Function.Call(Hash.SET_VEHICLE_MOD, car, (VehicleModType)i, rand.Next(0, mods), false);
+                //GetNumMod
+                var mods = car.GetModCount((VehicleMod)i);
+                //SetNumMod
+                car.SetMod((VehicleMod)i, mods, false);
             }
 
             //SetVehicleTint
-            Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, car, (VehicleWindowTint)rand.Next(0, 7));
+            car.WindowTint = (VehicleWindowTint)(rand.Next(0, 7));
 
             //NumberPlate
             Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT, car, platetext);
             car.PlaceOnNextStreet();
-            car.IsEngineRunning = true;
+            car.EngineRunning = true;
             car.Speed = 30;
             car.MarkAsNoLongerNeeded();
 
         }
 
         /// <summary>
-        /// 
+        /// GunGunGun
         /// </summary>
         /// <param name="ped">Ped model</param>
         /// <param name="weap">Primary Weapon</param>
@@ -340,13 +382,19 @@ namespace ILE_V
 
             ped.CanSwitchWeapons = true;
 
+            /*
             if (ped.Weapons.HasWeapon(WeaponHash.Pistol))
             {
                 Random rand = new Random();
                 int a = rand.Next(0, 2);
 
-                if (a == 0) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.Pistol, WeaponComponentHash.PistolClip01);
-                if (a == 1) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.Pistol, WeaponComponentHash.PistolClip02);
+                if (a == 0) 
+                if (a == 1) Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, new InputArgument[2]
+                {
+                WeaponHash.Pistol, 
+                WeaponComponent.PistolClip02 
+                }
+                );
             }
 
             if (ped.Weapons.HasWeapon(WeaponHash.CombatPistol))
@@ -354,10 +402,10 @@ namespace ILE_V
                 Random rand = new Random();
                 int a = rand.Next(0, 2);
 
-                if (a == 0) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.CombatPistol, WeaponComponentHash.CombatPistolClip01);
+                if (a == 0) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.CombatPistol, WeaponComponent.CombatPistolClip01);
                 if (a == 1) GTA.Native.Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, ped, WeaponHash.CombatPistol, WeaponComponentHash.CombatPistolClip02);
             }
-            /*
+            
             if (ped.Weapons.HasWeapon(WeaponHash.APPistol))
             {
                 Random rand = new Random();

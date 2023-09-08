@@ -15,15 +15,16 @@ namespace ILE_V
         public Aircrafts()
         {
             Tick += OnTick;
+            Interval = 20000;
         }
 
         private bool helialive = false;
-        private bool tacthelialive = false;
-        private bool planealive = false;
+        //private bool tacthelialive = false;
+        //private bool planealive = false;
 
         Vehicle heli;
-        Vehicle tacticalheli;
-        Vehicle plane;
+        //Vehicle tacticalheli;
+        //Vehicle plane;
 
         Ped helipilot;
 
@@ -34,7 +35,7 @@ namespace ILE_V
 
             if (wl >= 3)
             {
-                //OfficerHeli();
+                OfficerHeli();
             }
             if (wl >= 4)
             {
@@ -57,10 +58,9 @@ namespace ILE_V
             if (helialive == false)
             {
                 heli = Helpers.SpawnVehicle(ConfigLoader.HELICOPTERS[rand.Next(0, ConfigLoader.HELICOPTERS.Length)]);
-
-                heli.LandingGearState = VehicleLandingGearState.Retracted;
+                heli.LandingGear = VehicleLandingGear.Retracted;
                 Helpers.VehicleModifications(heli, "LSPD");
-                for (int i = -1; i < heli.PassengerCapacity; i++)
+                for (int i = -1; i < heli.PassengerCount; i++)
                 {
                     var p1 = Helpers.SpawnPed(ConfigLoader.IAA_OFFICERS[rand.Next(0, ConfigLoader.IAA_OFFICERS.Length)]);
                     p1.Task.WarpIntoVehicle(heli, (VehicleSeat)i);

@@ -34,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ScriptHookVDotNet3">
-      <HintPath>..\..\..\Games\GTAV\ScriptHookVDotNet3.dll</HintPath>
+    <Reference Include="ScriptHookVDotNet2">
+      <HintPath>..\DR\ScriptHookVDotNet2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,11 +51,10 @@
   <ItemGroup>
     <Compile Include="Aircrafts.cs" />
     <Compile Include="ConfigLoader.cs" />
-    <Compile Include="ConfigReader.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="TacticalSpawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OfficersSpawn.cs" />
+    <Compile Include="PoliceSpawner.cs" />
     <Compile Include="Zones.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

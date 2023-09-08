@@ -55,7 +55,7 @@ namespace ILE_V
 
         public static string[] BEACH =  { "OCEANA", "SanAnd" };
 
-        public static string[] SASPR = { "JAIL" };
+        public static string[] SASPA = { "JAIL" };
 
         public static string[] ZANCUDO = { "ARMYB", "LAGO", "ZANCUDO" };
 
@@ -65,15 +65,7 @@ namespace ILE_V
 
         public static string[] LSIA = { "AIRP" };
 
-        public Zones()
-        {
-            Interval = 10;
-            Tick += OnTick;
-        }
-        public void OnTick(object sender, EventArgs e)
-        {
-           
-        }
+        public static string[] FIB_IAA = { };
 
         public static string[] GetJurisdiction(Vector3 zone)
         {
@@ -84,9 +76,9 @@ namespace ILE_V
             {
                 return ALAMO;
             }
-            if (SASPR.Contains(value))
+            if (SASPA.Contains(value))
             {
-                return SASPR;
+                return SASPA;
             }
             if (ZANCUDO.Contains(value))
             {

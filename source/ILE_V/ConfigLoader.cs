@@ -1,12 +1,5 @@
 ﻿using GTA;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace ILE_V
 {
@@ -74,62 +67,60 @@ namespace ILE_V
 		public ConfigLoader()
         {
             Tick += LoadValues;
-            var IniFile = new IniFile("./scripts/ILE_V.ini");
 
             //Officers and Soldiers....
-            POLICE_OFFICERS = Helpers.ToArray(IniFile.GetValue("POLICE OFFICERS", "UNITS", "S_M_Y_COP_01, S_F_Y_COP_01"));
-            POLICE_OFFICERS_SAHP = Helpers.ToArray(IniFile.GetValue("HIGHWAY POLICE OFFICERS", "UNITS", "S_M_Y_COP_01, S_F_Y_COP_01, S_M_Y_HWayCOP_01"));
-            POLICE_OFFICERS_LSSD = Helpers.ToArray(IniFile.GetValue("SHERIFF DEPUTIES", "UNITS", "S_M_Y_SHERIFF_01, S_F_Y_SHERIFF_01"));
-            POLICE_OFFICERS_BCSO = Helpers.ToArray(IniFile.GetValue("BLAINE SHERIFF DEPUTIES", "UNITS", "S_M_Y_COP_01, S_F_Y_COP_01, S_M_Y_SHERIFF_01, S_F_Y_SHERIFF_01"));
-            POLICE_OFFICERS_SAPR = Helpers.ToArray(IniFile.GetValue("PARK RANGERS", "UNITS", "S_M_Y_RANGER_01, S_F_Y_RANGER_01"));
-            NOOSE_SOLDIERS = Helpers.ToArray(IniFile.GetValue("NOOSE SOLDIERS", "UNITS", "S_M_Y_SWAT_01, S_M_Y_SWAT_01"));
-            FIB_OFFICERS = Helpers.ToArray(IniFile.GetValue("FIB OFFICERS", "UNITS", "s_m_m_fibsec_01, s_m_m_fiboffice_01, s_m_m_fiboffice_02"));
-            IAA_OFFICERS = Helpers.ToArray(IniFile.GetValue("IAA OFFICERS", "UNITS", "s_m_m_ciasec_01, S_M_Y_SWAT_01"));
-            MARINE_SOLDIERS = Helpers.ToArray(IniFile.GetValue("MARINE SOLDIERS", "UNITS", "s_m_m_marine_01, s_m_m_marine_02, s_m_y_marine_01, s_m_y_marine_02, s_m_y_marine_03"));
-            MERRYW_SOLDIERS = Helpers.ToArray(IniFile.GetValue("MERRYWEATHER SOLDIERS", "UNITS", "s_m_y_blackops_01, s_m_y_blackops_02, s_m_y_blackops_03, s_m_m_chemsec_01"));
-            POLICE_DOGS = Helpers.ToArray(IniFile.GetValue("POLICE DOGS", "UNITS", "A_C_shepherd, A_C_Retriever, A_C_Rottweiler, A_C_Husky"));
-            LIFEGUARDS = Helpers.ToArray(IniFile.GetValue("LIFE GUARDS", "UNITS", "s_f_y_baywatch_01, s_m_y_baywatch_01"));
-            COASTGUARDS = Helpers.ToArray(IniFile.GetValue("COAST GUARDS", "UNITS", "s_m_y_uscg_01, s_m_y_baywatch_01, s_m_y_cop_01"));
+            POLICE_OFFICERS = Helpers.ToArray(Settings.GetValue("POLICE OFFICERS", "UNITS", "S_M_Y_COP_01, S_F_Y_COP_01"));
+            POLICE_OFFICERS_SAHP = Helpers.ToArray(Settings.GetValue("HIGHWAY POLICE OFFICERS", "UNITS", "S_M_Y_COP_01, S_F_Y_COP_01, S_M_Y_HWayCOP_01"));
+            POLICE_OFFICERS_LSSD = Helpers.ToArray(Settings.GetValue("SHERIFF DEPUTIES", "UNITS", "S_M_Y_SHERIFF_01, S_F_Y_SHERIFF_01"));
+            POLICE_OFFICERS_BCSO = Helpers.ToArray(Settings.GetValue("BLAINE SHERIFF DEPUTIES", "UNITS", "S_M_Y_COP_01, S_F_Y_COP_01, S_M_Y_SHERIFF_01, S_F_Y_SHERIFF_01"));
+            POLICE_OFFICERS_SAPR = Helpers.ToArray(Settings.GetValue("PARK RANGERS", "UNITS", "S_M_Y_RANGER_01, S_F_Y_RANGER_01"));
+            NOOSE_SOLDIERS = Helpers.ToArray(Settings.GetValue("NOOSE SOLDIERS", "UNITS", "S_M_Y_SWAT_01, S_M_Y_SWAT_01"));
+            FIB_OFFICERS = Helpers.ToArray(Settings.GetValue("FIB OFFICERS", "UNITS", "s_m_m_fibsec_01, s_m_m_fiboffice_01, s_m_m_fiboffice_02"));
+            IAA_OFFICERS = Helpers.ToArray(Settings.GetValue("IAA OFFICERS", "UNITS", "s_m_m_ciasec_01, S_M_Y_SWAT_01"));
+            MARINE_SOLDIERS = Helpers.ToArray(Settings.GetValue("MARINE SOLDIERS", "UNITS", "s_m_m_marine_01, s_m_m_marine_02, s_m_y_marine_01, s_m_y_marine_02, s_m_y_marine_03"));
+            MERRYW_SOLDIERS = Helpers.ToArray(Settings.GetValue("MERRYWEATHER SOLDIERS", "UNITS", "s_m_y_blackops_01, s_m_y_blackops_02, s_m_y_blackops_03, s_m_m_chemsec_01"));
+            POLICE_DOGS = Helpers.ToArray(Settings.GetValue("POLICE DOGS", "UNITS", "A_C_shepherd, A_C_Retriever, A_C_Rottweiler, A_C_Husky"));
+            LIFEGUARDS = Helpers.ToArray(Settings.GetValue("LIFE GUARDS", "UNITS", "s_f_y_baywatch_01, s_m_y_baywatch_01"));
+            COASTGUARDS = Helpers.ToArray(Settings.GetValue("COAST GUARDS", "UNITS", "s_m_y_uscg_01, s_m_y_baywatch_01, s_m_y_cop_01"));
 
             //Vehicles.....
-            VEHICLES = Helpers.ToArray(IniFile.GetValue("UNIVERSALLY USABLE", "VEHICLES", "POLICET, RIOT, INSURGENT2"));
-            ARMOURED_VEHICLES = Helpers.ToArray(IniFile.GetValue("ARMOURED VEHICLES", "VEHICLES", "BARRAGE, RIOT2, INSURGENT"));
-            HELICOPTERS = Helpers.ToArray(IniFile.GetValue("UNIVERSALLY USABLE HELI", "VEHICLES", "ANNIHILATOR, ANNIHILATOR2, BUZZARD2, POLMAV"));
-            FIGHTER_PLANES = Helpers.ToArray(IniFile.GetValue("FIGHTERS", "VEHICLES", "LAZER, HYDRA"));
-            ATTACK_HELICOPTERS = Helpers.ToArray(IniFile.GetValue("ATTACK HELI", "VEHICLES", "HUNTER, SAVAGE, BUZZARD"));
-            POLICE_HELICOPERS = Helpers.ToArray(IniFile.GetValue("POLICE HELI", "VEHICLES", "POLMAV, ANNIHILATOR, FROGGER"));
-            POLICE_VEHICLES = Helpers.ToArray(IniFile.GetValue("POLICE CARS", "VEHICLES", "POLICE, POLICE2, POLICE3, POLICET"));
-            POLICE_VEHICLES_BCSO = Helpers.ToArray(IniFile.GetValue("BLAINE SHERIFF CARS", "VEHICLES", "SHERIFF, SHERIFF2, GRANGER"));
-            POLICE_VEHICLES_LSSD = Helpers.ToArray(IniFile.GetValue("SHERIFF CARS", "VEHICLES", "SHERIFF, SHERIFF2, GRANGER"));
-            POLICE_VEHICLES_SAPR = Helpers.ToArray(IniFile.GetValue("PARK RANGER CARS", "VEHICLES", "PRANGER, SHERIFF, SHERIFF2, GRANGER"));
-            POLICE_VEHICLES_SAHP = Helpers.ToArray(IniFile.GetValue("HIGHWAY PATROL CARS", "VEHICLES", "POLICE2, POLICE, POLICEB"));
-            NOOSE_HELICOPTERS = Helpers.ToArray(IniFile.GetValue("NOOSE HELI", "VEHICLES", "POLMAV, ANNIHILATOR, FROGGER, ANNIHILATOR2, BUZZARD, BUZZARD2"));
-            NOOSE_VEHICLES = Helpers.ToArray(IniFile.GetValue("NOOSE VEHICLES", "VEHICLES", "RIOT, FBI2, RIOT2, BRICKADE2, BRICKADE, POLICET, INSURGENT, INSURGENT2, INSURGENT3"));
-            FIB_HELICOPTERS = Helpers.ToArray(IniFile.GetValue("FIB HELI", "VEHICLES", "BUZZARD, ANNIHILATOR, FROGGER"));
-            FIB_VEHICLES = Helpers.ToArray(IniFile.GetValue("FIB CARS", "VEHICLES", "FBI, FBI2, POLICE4, CHEETAH, INFERNUS, COMET, TURISMO"));
-            IAA_VEHICLES = Helpers.ToArray(IniFile.GetValue("IAA CARS", "VEHICLES", "FBI, FBI2, POLICE4, CHEETAH, INFERNUS, COMET, TURISMO"));
-            IAA_HELICOPTERS = Helpers.ToArray(IniFile.GetValue("IAA HELI", "VEHICLES", "BUZZARD, ANNIHILATOR, FROGGER"));
-            MARINE_HELICOPTERS = Helpers.ToArray(IniFile.GetValue("MARINE HELI", "VEHICLES", "ANNIHILATOR2, ANNIHILATOR, BUZZARD, VALKYRIE, VALKYRIE2, SAVAGE, CARGOBOB, "));
-            MARINE_VEHICLES = Helpers.ToArray(IniFile.GetValue("MARINE VEHICLES", "VEHICLES", "CRUSADER, INSURGENT, INSURGENT2, INSURGENT3, BARRAGE, TECHNICAL, TECHNICAL2, BARRACKS, BARRACKS2, BARRACKS3, WINKY"));
-            MERRYW_HELICOPTERS = Helpers.ToArray(IniFile.GetValue("MERRYWEATHER HELI", "VEHICLES", "POLMAV, ANNIHILATOR, FROGGER"));
-            MERRYW_VEHICLES = Helpers.ToArray(IniFile.GetValue("MERRYWEATHER VEHICLES", "VEHICLES", "MESA3, CRUSADER, INSURGENT"));
-            COASTGUARD_VEHICLES = Helpers.ToArray(IniFile.GetValue("COAST GUARD VEHICLES", "VEHICLES", "LGUARD, BLAZER, POLICE"));
-            LIFEGUARD_VEHICLES = Helpers.ToArray(IniFile.GetValue("LIFE GUARD VEHICLES", "VEHICLES", "LGUARD, BLAZER, POLICE"));
+            VEHICLES = Helpers.ToArray(Settings.GetValue("UNIVERSALLY USABLE", "VEHICLES", "POLICET, RIOT, INSURGENT2"));
+            ARMOURED_VEHICLES = Helpers.ToArray(Settings.GetValue("ARMOURED VEHICLES", "VEHICLES", "BARRAGE, RIOT2, INSURGENT"));
+            HELICOPTERS = Helpers.ToArray(Settings.GetValue("UNIVERSALLY USABLE HELI", "VEHICLES", "ANNIHILATOR, ANNIHILATOR2, BUZZARD2, POLMAV"));
+            FIGHTER_PLANES = Helpers.ToArray(Settings.GetValue("FIGHTERS", "VEHICLES", "LAZER, HYDRA"));
+            ATTACK_HELICOPTERS = Helpers.ToArray(Settings.GetValue("ATTACK HELI", "VEHICLES", "HUNTER, SAVAGE, BUZZARD"));
+            POLICE_HELICOPERS = Helpers.ToArray(Settings.GetValue("POLICE HELI", "VEHICLES", "POLMAV, ANNIHILATOR, FROGGER"));
+            POLICE_VEHICLES = Helpers.ToArray(Settings.GetValue("POLICE CARS", "VEHICLES", "POLICE, POLICE2, POLICE3, POLICET"));
+            POLICE_VEHICLES_BCSO = Helpers.ToArray(Settings.GetValue("BLAINE SHERIFF CARS", "VEHICLES", "SHERIFF, SHERIFF2, GRANGER"));
+            POLICE_VEHICLES_LSSD = Helpers.ToArray(Settings.GetValue("SHERIFF CARS", "VEHICLES", "SHERIFF, SHERIFF2, GRANGER"));
+            POLICE_VEHICLES_SAPR = Helpers.ToArray(Settings.GetValue("PARK RANGER CARS", "VEHICLES", "PRANGER, SHERIFF, SHERIFF2, GRANGER"));
+            POLICE_VEHICLES_SAHP = Helpers.ToArray(Settings.GetValue("HIGHWAY PATROL CARS", "VEHICLES", "POLICE2, POLICE, POLICEB"));
+            NOOSE_HELICOPTERS = Helpers.ToArray(Settings.GetValue("NOOSE HELI", "VEHICLES", "POLMAV, ANNIHILATOR, FROGGER, ANNIHILATOR2, BUZZARD, BUZZARD2"));
+            NOOSE_VEHICLES = Helpers.ToArray(Settings.GetValue("NOOSE VEHICLES", "VEHICLES", "RIOT, FBI2, RIOT2, BRICKADE2, BRICKADE, POLICET, INSURGENT, INSURGENT2, INSURGENT3"));
+            FIB_HELICOPTERS = Helpers.ToArray(Settings.GetValue("FIB HELI", "VEHICLES", "BUZZARD, ANNIHILATOR, FROGGER"));
+            FIB_VEHICLES = Helpers.ToArray(Settings.GetValue("FIB CARS", "VEHICLES", "FBI, FBI2, POLICE4, CHEETAH, INFERNUS, COMET2, TURISMO2"));
+            IAA_VEHICLES = Helpers.ToArray(Settings.GetValue("IAA CARS", "VEHICLES", "FBI, FBI2, POLICE4, CHEETAH, INFERNUS, COMET2, TURISMO2"));
+            IAA_HELICOPTERS = Helpers.ToArray(Settings.GetValue("IAA HELI", "VEHICLES", "BUZZARD, ANNIHILATOR, FROGGER"));
+            MARINE_HELICOPTERS = Helpers.ToArray(Settings.GetValue("MARINE HELI", "VEHICLES", "ANNIHILATOR2, ANNIHILATOR, BUZZARD, VALKYRIE, VALKYRIE2, SAVAGE, CARGOBOB"));
+            MARINE_VEHICLES = Helpers.ToArray(Settings.GetValue("MARINE VEHICLES", "VEHICLES", "CRUSADER, INSURGENT, INSURGENT2, INSURGENT3, BARRAGE, TECHNICAL, TECHNICAL2, BARRACKS, BARRACKS2, BARRACKS3, WINKY"));
+            MERRYW_HELICOPTERS = Helpers.ToArray(Settings.GetValue("MERRYWEATHER HELI", "VEHICLES", "POLMAV, ANNIHILATOR, FROGGER"));
+            MERRYW_VEHICLES = Helpers.ToArray(Settings.GetValue("MERRYWEATHER VEHICLES", "VEHICLES", "MESA3, CRUSADER, INSURGENT"));
+            COASTGUARD_VEHICLES = Helpers.ToArray(Settings.GetValue("COAST GUARD VEHICLES", "VEHICLES", "LGUARD, BLAZER, POLICE"));
+            LIFEGUARD_VEHICLES = Helpers.ToArray(Settings.GetValue("LIFE GUARD VEHICLES", "VEHICLES", "LGUARD, BLAZER, POLICE"));
 
             //Weapons.....
-            POLICE_WEAPON_LIGHT = Helpers.ToArray(IniFile.GetValue("POLICE LIGHT WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
-            POLICE_WEAPON_HEAVY = Helpers.ToArray(IniFile.GetValue("POLICE HEAVY WEAPONS", "WEAPONS", "WEAPON_CARBINERIFLE, WEAPON_SPECIALCARBINE, WEAPON_SMG"));
-            NOOSE_WEAPON = Helpers.ToArray(IniFile.GetValue("NOOSE WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
-            IAA_FIB_WEAPON = Helpers.ToArray(IniFile.GetValue("FIB/IAA WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
-            MERRYW_WEAPON = Helpers.ToArray(IniFile.GetValue("MERRYWEATHER WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
-            MERRYW_EXPLOSIVES = Helpers.ToArray(IniFile.GetValue("MERRYWEATHER EXPLOSIVE WEAPONS", "WEAPONS", "WEAPON_GRENADELAUNCHER, WEAPON_RPG, WEAPON_GRENADELAUNCHER_SMOKE, WEAPON_BZGAS"));
-            MARINE_WEAPON = Helpers.ToArray(IniFile.GetValue("MARINE WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
-            MARINE_EXPLOSIVES = Helpers.ToArray(IniFile.GetValue("MARINE EXPLOSIVE WEAPONS", "WEAPONS", "WEAPON_GRENADELAUNCHER, WEAPON_RPG, WEAPON_GRENADELAUNCHER_SMOKE, WEAPON_BZGAS"));
+            POLICE_WEAPON_LIGHT = Helpers.ToArray(Settings.GetValue("POLICE LIGHT WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
+            POLICE_WEAPON_HEAVY = Helpers.ToArray(Settings.GetValue("POLICE HEAVY WEAPONS", "WEAPONS", "WEAPON_CARBINERIFLE, WEAPON_SPECIALCARBINE, WEAPON_SMG"));
+            NOOSE_WEAPON = Helpers.ToArray(Settings.GetValue("NOOSE WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
+            IAA_FIB_WEAPON = Helpers.ToArray(Settings.GetValue("FIB/IAA WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
+            MERRYW_WEAPON = Helpers.ToArray(Settings.GetValue("MERRYWEATHER WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
+            MERRYW_EXPLOSIVES = Helpers.ToArray(Settings.GetValue("MERRYWEATHER EXPLOSIVE WEAPONS", "WEAPONS", "WEAPON_GRENADELAUNCHER, WEAPON_RPG, WEAPON_GRENADELAUNCHER_SMOKE, WEAPON_BZGAS"));
+            MARINE_WEAPON = Helpers.ToArray(Settings.GetValue("MARINE WEAPONS", "WEAPONS", "WEAPON_PUMPSHOTGUN, WEAPON_MICROSMG, WEAPON_SMG"));
+            MARINE_EXPLOSIVES = Helpers.ToArray(Settings.GetValue("MARINE EXPLOSIVE WEAPONS", "WEAPONS", "WEAPON_GRENADELAUNCHER, WEAPON_RPG, WEAPON_GRENADELAUNCHER_SMOKE, WEAPON_BZGAS"));
 
-            SPAWN_GAP = IniFile.GetInteger("SETTINGS", "SPAWNING GAP", 20000);
-            SIDEARMS = Helpers.ToArray(IniFile.GetValue("SIDEARMS", "WEAPONS", "WEAPON_PISTOL, WEAPON_COMBATPISTOL, WEAPON_APPISTOL, WEAPON_SNS"));
-            DEBUGGING = IniFile.GetBoolean("DEBUGGING", "SETTINGS", true);
-
+            SPAWN_GAP = Settings.GetValue("SPAWNING GAP", "SETTINGS", 15000);
+            SIDEARMS = Helpers.ToArray(Settings.GetValue("SIDEARMS", "WEAPONS", "WEAPON_PISTOL, WEAPON_COMBATPISTOL, WEAPON_APPISTOL, WEAPON_SNS"));
+            DEBUGGING = Settings.GetValue("DEBUGGING", "SETTINGS", true);
         }
 
         public static void LoadValues(object sender, EventArgs e)
