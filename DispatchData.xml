@@ -1,0 +1,175 @@
+<?xml version="1.0" ?>
+<!--wiki.rage.mp/wiki/Weapons_Components-->
+<DispatchConfig lastModified="2025-06-08" modifiedBy="VampireKun">
+    <DispatchVehicleInfo>
+        <Dispatch name="Heli_NOOSE" task="rappel rappel land" region="ALL">
+            <Vehicles>
+				<Vehicle model="NOOSE_HELI_4SEAT"/>
+                <Vehicle model="NOOSE_HELI_6SEAT"/>
+            </Vehicles>
+            <Pilots>
+                <Pilot>LSPD_Police</Pilot>
+				<Pilot>NOOSE_Soldiers</Pilot>
+            </Pilots>
+            <Soldiers>
+                <Soldier>LSPD_Police</Soldier>
+                <Soldier>NOOSE_Soldiers</Soldier>
+            </Soldiers>
+            <Weapons>
+                <PrimaryWeapons>
+					<Weapon name="CarbineSeries"/>
+					<Weapon name="CarbineSeries"/>
+                </PrimaryWeapons>
+                <SecondaryWeapons>
+					<Weapon name="PistolSeries"/>
+					<Weapon name="PistolSeries"/>
+                </SecondaryWeapons>
+            </Weapons>
+        </Dispatch>
+		
+        <Dispatch name="Heli_Police" region="all" task="attack">
+            <Vehicles>
+				<Vehicle model="NOOSE_HELI_4SEAT"/>
+                <Vehicle model="NOOSE_HELI_4SEAT"/>
+            </Vehicles>
+			<Pilots>
+				<Pilot>LSPD_Police</Pilot>
+				<Pilot>NOOSE_Soldiers</Pilot>
+			</Pilots>
+			<Soldiers>
+				<Soldier>LSPD_Police</Soldier>
+				<Soldier>NOOSE_Soldiers</Soldier>
+			</Soldiers>
+            <Weapons>
+				<PrimaryWeapons>
+					<Weapon name="CarbineSeries"/>
+					<Weapon name="CarbineSeries"/>
+				</PrimaryWeapons>
+				<SecondaryWeapons>
+					<Weapon name="PistolSeries"/>
+					<Weapon name="PistolSeries"/>
+				</SecondaryWeapons>
+            </Weapons>
+        </Dispatch>
+		
+        <Dispatch name="Police_Car" task="harass">
+            <Vehicles>
+                <Vehicle model="LSPD_Vehicles" />
+				<Vehicle model="NOOSE_Vans"/>
+            </Vehicles>
+			<Pilots>
+				<Pilot>LSPD_Police</Pilot>
+				<Pilot>NOOSE_Soldiers</Pilot>
+			</Pilots>
+			<Soldiers>
+				<Soldier>LSPD_Police</Soldier>
+				<Soldier>NOOSE_Soldiers</Soldier>
+			</Soldiers>
+            <Weapons>
+				<PrimaryWeapons>
+					<Weapon name="CarbineSeries"/>
+					<Weapon name="PistolSeries"/>
+					<Weapon name="SMGSeries"/>
+				</PrimaryWeapons>
+				<SecondaryWeapons>
+					<Weapon name="PistolSeries"/>
+					<Weapon name="PistolSeries"/>
+				</SecondaryWeapons>
+            </Weapons>
+        </Dispatch>
+		
+        <Dispatch name="Police_Car2" task="">
+            <Vehicles>
+                <Vehicle model="LSPD_Vehicles" />
+				<Vehicle model="NOOSE_Vans"/>
+            </Vehicles>
+			<Pilots>
+				<Pilot>LSPD_Police</Pilot>
+				<Pilot>NOOSE_Soldiers</Pilot>
+			</Pilots>
+			<Soldiers>
+				<Soldier>LSPD_Police</Soldier>
+				<Soldier>NOOSE_Soldiers</Soldier>
+			</Soldiers>
+            <Weapons>
+				<PrimaryWeapons>
+					<Weapon name="PistolSeries"/>
+					<Weapon name="SMGSeries"/>
+				</PrimaryWeapons>
+				<SecondaryWeapons>
+					<Weapon name="PistolSeries"/>
+					<Weapon name="PistolSeries"/>
+				</SecondaryWeapons>
+            </Weapons>
+        </Dispatch>
+    </DispatchVehicleInfo>
+	
+	
+    <WantedLevels>
+        <WantedLevel star="One">
+            <DispatchType type="Air" maxunits="0">
+                <DispatchSet>Heli_NOOSE</DispatchSet>
+                <DispatchSet>Heli_Police</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Sea" maxunits="1">
+                <DispatchSet>Boat</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Ground" maxunits="2">
+                <DispatchSet>Police_Car2</DispatchSet>
+                <DispatchSet>Police_Car</DispatchSet>
+            </DispatchType>
+        </WantedLevel>
+        <WantedLevel star="Two">
+            <DispatchType type="Air" maxunits="0">
+				<DispatchSet>Heli_NOOSE</DispatchSet>
+				<DispatchSet>Heli_Police</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Sea" maxunits="1">
+                <DispatchSet>Boat</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Ground" maxunits="2">
+				<DispatchSet>Police_Car2</DispatchSet>
+				<DispatchSet>Police_Car</DispatchSet>
+            </DispatchType>
+        </WantedLevel>
+        <WantedLevel star="Three">
+            <DispatchType type="Air" maxunits="1">
+				<DispatchSet>Heli_NOOSE</DispatchSet>
+				<DispatchSet>Heli_Police</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Sea" maxunits="2">
+                <DispatchSet>Boat</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Ground" maxunits="3">
+				<DispatchSet>Police_Car2</DispatchSet>
+				<DispatchSet>Police_Car</DispatchSet>
+            </DispatchType>
+        </WantedLevel>
+        <WantedLevel star="Four">
+            <DispatchType type="Air" maxunits="2">
+				<DispatchSet>Heli_NOOSE</DispatchSet>
+				<DispatchSet>Heli_Police</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Sea" maxunits="3">
+                <DispatchSet>Boat</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Ground" maxunits="4">
+				<DispatchSet>Police_Car2</DispatchSet>
+				<DispatchSet>Police_Car</DispatchSet>
+            </DispatchType>
+        </WantedLevel>
+        <WantedLevel star="Five">
+            <DispatchType type="Air" maxunits="2">
+				<DispatchSet>Heli_NOOSE</DispatchSet>
+				<DispatchSet>Heli_Police</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Sea" maxunits="4">
+                <DispatchSet>Boat</DispatchSet>
+            </DispatchType>
+            <DispatchType type="Ground" maxunits="5">
+				<DispatchSet>Police_Car2</DispatchSet>
+				<DispatchSet>Police_Car</DispatchSet>
+            </DispatchType>
+        </WantedLevel>
+    </WantedLevels>
+</DispatchConfig>

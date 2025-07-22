@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<WeaponInformation>
+    <WeaponData name="CarbineSeries">
+        <Weapon model="weapon_carbinerifle" ammo="400" attachments="COMPONENT_CARBINERIFLE_CLIP_03 COMPONENT_AT_AR_FLSH"/>
+        <Weapon model="weapon_carbinerifle" ammo="400" attachments="COMPONENT_AT_AR_AFGRIP COMPONENT_AT_AR_SUPP COMPONENT_AT_SCOPE_MEDIUM COMPONENT_AT_AR_FLSH	"/>
+    </WeaponData>
+    <WeaponData name="CarbineMKSeries">
+        <Weapon model="weapon_carbinerifle_mk2" ammo="400" attachments="COMPONENT_AT_SIGHTS COMPONENT_AT_AR_AFGRIP_02 COMPONENT_CARBINERIFLE_MK2_CLIP_ARMORPIERCING"/>
+        <Weapon model="weapon_carbinerifle_mk2" ammo="400" attachments="COMPONENT_AT_CR_BARREL_02 COMPONENT_AT_SCOPE_MEDIUM_MK2 COMPONENT_CARBINERIFLE_MK2_CLIP_FMJ"/>
+    </WeaponData>
+    <WeaponData name="SMGSeries">
+        <Weapon model="weapon_smg" ammo="400" attachments="COMPONENT_SMG_CLIP_02 COMPONENT_AT_AR_FLSH COMPONENT_SMG_VARMOD_LUXE COMPONENT_AT_SCOPE_MACRO_02"/>
+        <Weapon model="weapon_assaultsmg" ammo="400" attachments="COMPONENT_ASSAULTSMG_CLIP_02 COMPONENT_AT_AR_SUPP_02 COMPONENT_AT_AR_FLSH"/>
+    </WeaponData>
+    <WeaponData name="PistolSeries">
+        <Weapon model="weapon_pistol" ammo="40" attachments="COMPONENT_PISTOL_CLIP_02 COMPONENT_PISTOL_VARMOD_LUXE COMPONENT_AT_PI_SUPP_02"/>
+        <Weapon model="weapon_pistol" ammo="40" attachments="COMPONENT_AT_PI_FLSH COMPONENT_AT_PI_SUPP_02"/>
+    </WeaponData>
+    <WeaponData name="PistolMKSeries">
+        <Weapon model="weapon_pistol_mk2" ammo="40" attachments="COMPONENT_PISTOL_MK2_CLIP_TRACER COMPONENT_AT_PI_RAIL"/>
+        <Weapon model="weapon_pistol_mk2" ammo="40" attachments="COMPONENT_AT_PI_SUPP_02 COMPONENT_PISTOL_MK2_CAMO_02 COMPONENT_PISTOL_MK2_CLIP_02"/>
+    </WeaponData>
+    <WeaponData name="Name of the weapon tag">
+        <Weapon model="WEAPON_ASSAULTRIFLE" ammo="400" attachments="" flag="onfoot vehicle"/>
+		<!--flag is for vehicles weapons-->
+        <Weapon model="WEAPON_ASSAULTRIFLE" ammo="400" attachments=""/>
+    </WeaponData>
+	
+</WeaponInformation>

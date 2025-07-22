@@ -1,0 +1,204 @@
+<?xml version="1.0" ?>
+<RegionInfo>
+    <Region name="LSPD">
+        <ZoneNames>FRANI</ZoneNames>
+        <ZoneNames>BEECW</ZoneNames>
+        <ZoneNames>BEGGA</ZoneNames>
+        <ZoneNames>BOAB</ZoneNames>
+        <ZoneNames>BOTU</ZoneNames>
+        <ZoneNames>BOULE</ZoneNames>
+        <ZoneNames>BRBRO</ZoneNames>
+        <ZoneNames>BRALG</ZoneNames>
+        <ZoneNames>BREBB</ZoneNames>
+        <ZoneNames>BRDBB</ZoneNames>
+        <ZoneNames>NOWOB</ZoneNames>
+        <ZoneNames>HIBRG</ZoneNames>
+        <ZoneNames>CERHE</ZoneNames>
+        <ZoneNames>CHAPO</ZoneNames>
+        <ZoneNames>CITH</ZoneNames>
+        <ZoneNames>DOWTW</ZoneNames>
+        <ZoneNames>ESHOO</ZoneNames>
+        <ZoneNames>EISLC</ZoneNames>
+        <ZoneNames>FIREP</ZoneNames>
+        <ZoneNames>FORSI</ZoneNames>
+        <ZoneNames>FIISL</ZoneNames>
+        <ZoneNames>HOBEH</ZoneNames>
+        <ZoneNames>HAPIN</ZoneNames>
+        <ZoneNames>INSTI</ZoneNames>
+        <ZoneNames>LTBAY</ZoneNames>
+        <ZoneNames>LEAPE</ZoneNames>
+        <ZoneNames>MEADH</ZoneNames>
+        <ZoneNames>MEADP</ZoneNames>
+        <ZoneNames>NRTGA</ZoneNames>
+        <ZoneNames>OUTL</ZoneNames>
+        <ZoneNames>ALSCF</ZoneNames>
+        <ZoneNames>ROTTH</ZoneNames>
+        <ZoneNames>SCHOL</ZoneNames>
+        <ZoneNames>SUTHS</ZoneNames>
+        <ZoneNames>STHBO</ZoneNames>
+        <ZoneNames>STARJ</ZoneNames>
+        <ZoneNames>STEIN</ZoneNames>
+        <ZoneNames>WILLI</ZoneNames>
+        <ZoneNames>ACTRR</ZoneNames>
+        <ZoneNames>ACTIP</ZoneNames>
+        <ZoneNames>ALDCI</ZoneNames>
+        <ZoneNames>BERCH</ZoneNames>
+        <ZoneNames>CASGR</ZoneNames>
+        <ZoneNames>CASGC</ZoneNames>
+        <ZoneNames>CHITO</ZoneNames>
+        <ZoneNames>CHISL</ZoneNames>
+        <ZoneNames>COISL</ZoneNames>
+        <ZoneNames>EASON</ZoneNames>
+        <ZoneNames>EAHOL</ZoneNames>
+        <ZoneNames>THXCH</ZoneNames>
+        <ZoneNames>FISSN</ZoneNames>
+        <ZoneNames>FISSO</ZoneNames>
+        <ZoneNames>HATGA</ZoneNames>
+        <ZoneNames>LITAL</ZoneNames>
+        <ZoneNames>LANCA</ZoneNames>
+        <ZoneNames>LANCE</ZoneNames>
+        <ZoneNames>LEFWO</ZoneNames>
+        <ZoneNames>LOWEA</ZoneNames>
+        <ZoneNames>MIDPW</ZoneNames>
+        <ZoneNames>TMEQU</ZoneNames>
+        <ZoneNames>MIDPE</ZoneNames>
+        <ZoneNames>MIDPA</ZoneNames>
+        <ZoneNames>NOHOL</ZoneNames>
+        <ZoneNames>NORMY</ZoneNames>
+        <ZoneNames>NORWO</ZoneNames>
+        <ZoneNames>PORTU</ZoneNames>
+        <ZoneNames>THPRES</ZoneNames>
+        <ZoneNames>PUGAT</ZoneNames>
+        <ZoneNames>SUFFO</ZoneNames>
+        <ZoneNames>THTRI</ZoneNames>
+        <ZoneNames>TUDOR</ZoneNames>
+        <ZoneNames>VASIH</ZoneNames>
+        <ZoneNames>WESDY</ZoneNames>
+        <ZoneNames>WESMI</ZoneNames>
+        <ZoneNames>BANHAMCA</ZoneNames>
+        <ZoneNames>ALTA</ZoneNames>
+        <ZoneNames>BANNING</ZoneNames>
+        <ZoneNames>BURTON</ZoneNames>
+        <ZoneNames>CHAMH</ZoneNames>
+        <ZoneNames>CYPRE</ZoneNames>
+        <ZoneNames>DAVIS</ZoneNames>
+        <ZoneNames>DELPE</ZoneNames>
+        <ZoneNames>DELBE</ZoneNames>
+        <ZoneNames>DOWNT</ZoneNames>
+        <ZoneNames>DTVINE</ZoneNames>
+        <ZoneNames>EAST_V</ZoneNames>
+        <ZoneNames>golf</ZoneNames>
+        <ZoneNames>HAWICK</ZoneNames>
+        <ZoneNames>LMESA</ZoneNames>
+        <ZoneNames>LOSPUER</ZoneNames>
+        <ZoneNames>LEGSQU</ZoneNames>
+        <ZoneNames>KOREAT</ZoneNames>
+        <ZoneNames>STAD</ZoneNames>
+        <ZoneNames>MIRR</ZoneNames>
+        <ZoneNames>SKID</ZoneNames>
+        <ZoneNames>MORN</ZoneNames>
+        <ZoneNames>MURRI</ZoneNames>
+        <ZoneNames>PBLUFF</ZoneNames>
+        <ZoneNames>PBOX</ZoneNames>
+        <ZoneNames>ZP_ORT</ZoneNames>
+        <ZoneNames>DELSOL</ZoneNames>
+        <ZoneNames>RANCHO</ZoneNames>
+        <ZoneNames>MOVIE</ZoneNames>
+        <ZoneNames>RICHM</ZoneNames>
+        <ZoneNames>ROCKF</ZoneNames>
+        <ZoneNames>STRAW</ZoneNames>
+        <ZoneNames>TERMINA</ZoneNames>
+        <ZoneNames>TEXTI</ZoneNames>
+        <ZoneNames>TONGVAH</ZoneNames>
+        <ZoneNames>TONGVAV</ZoneNames>
+        <ZoneNames>VESP</ZoneNames>
+        <ZoneNames>BEACH</ZoneNames>
+        <ZoneNames>VCANA</ZoneNames>
+        <ZoneNames>VINE</ZoneNames>
+        <ZoneNames>HORS</ZoneNames>
+        <ZoneNames>WVINE</ZoneNames>
+        <ZoneNames>OBSERV</ZoneNames>
+    </Region>
+    <Region name="LSSD">
+        <ZoneNames>BHAMCA</ZoneNames>
+        <ZoneNames>BANHAMC</ZoneNames>
+        <ZoneNames>CHU</ZoneNames>
+        <ZoneNames>ZQ_UAR</ZoneNames>
+        <ZoneNames>EBURO</ZoneNames>
+        <ZoneNames>DESRT</ZoneNames>
+        <ZoneNames>GREATC</ZoneNames>
+        <ZoneNames>LDAM</ZoneNames>
+        <ZoneNames>LACT</ZoneNames>
+        <ZoneNames>PALMPOW</ZoneNames>
+        <ZoneNames>RGLEN</ZoneNames>
+        <ZoneNames>WINDF</ZoneNames>
+        <ZoneNames>TONGVAV</ZoneNames>
+        <ZoneNames>CHIL</ZoneNames>
+        <ZoneNames>BAYTRE</ZoneNames>
+        <ZoneNames>GALLI</ZoneNames>
+    </Region>
+    <Region name="BCSO">
+        <ZoneNames>BRADP</ZoneNames>
+        <ZoneNames>ELGORL</ZoneNames>
+        <ZoneNames>GALFISH</ZoneNames>
+        <ZoneNames>GRAPES</ZoneNames>
+        <ZoneNames>HARMO</ZoneNames>
+        <ZoneNames>LAGO</ZoneNames>
+        <ZoneNames>MTJOSE</ZoneNames>
+        <ZoneNames>NCHU</ZoneNames>
+        <ZoneNames>PALETO</ZoneNames>
+        <ZoneNames>PALCOV</ZoneNames>
+        <ZoneNames>PROCOB</ZoneNames>
+        <ZoneNames>SANCHIA</ZoneNames>
+        <ZoneNames>SANDY</ZoneNames>
+        <ZoneNames>SLAB</ZoneNames>
+        <ZoneNames>BRADT</ZoneNames>
+        <ZoneNames>ZANCUDO</ZoneNames>
+    </Region>
+    <Region name="SAPR">
+        <ZoneNames>CALAFB</ZoneNames>
+        <ZoneNames>CCREAK</ZoneNames>
+        <ZoneNames>CMSW</ZoneNames>
+        <ZoneNames>MTCHIL</ZoneNames>
+        <ZoneNames>MTGORDO</ZoneNames>
+        <ZoneNames>PALFOR</ZoneNames>
+        <ZoneNames>RTRAK</ZoneNames>
+        <ZoneNames>TATAMO</ZoneNames>
+        <ZoneNames>PALHIGH</ZoneNames>
+        <ZoneNames>CANNY</ZoneNames>
+    </Region>
+    <Region name="SAHP">
+        <ZoneNames>Route 68</ZoneNames>
+        <ZoneNames>Olympic Fwy</ZoneNames>
+        <ZoneNames>Del Perro Fwy</ZoneNames>
+        <ZoneNames>Senora Fwy</ZoneNames>
+        <ZoneNames>Great Ocean Hwy</ZoneNames>
+        <ZoneNames>La Puerta Fwy</ZoneNames>
+        <ZoneNames>Los Santos Freeway</ZoneNames>
+        <ZoneNames>Elysian Fields Fwy</ZoneNames>
+        <ZoneNames>Palomino Fwy</ZoneNames>
+    </Region>
+    <Region name="NOOSE">
+        <ZoneNames>NOOSE</ZoneNames>
+    </Region>
+    <Region name="OCEANA">
+        <ZoneNames>OCEANA</ZoneNames>
+        <ZoneNames>SanAnd</ZoneNames>
+    </Region>
+    <Region name="BOLINGBROKE">
+        <ZoneNames>JAIL</ZoneNames>
+    </Region>
+    <Region name="SANG">
+        <ZoneNames>ARMYB</ZoneNames>
+    </Region>
+    <Region name="ALAMO">
+        <ZoneNames>ALAMO</ZoneNames>
+    </Region>
+    <Region name="MERRYWEATHER">
+        <ZoneNames>HUMLAB</ZoneNames>
+        <ZoneNames>ELYSIAN</ZoneNames>
+    </Region>
+    <Region name="AIRPORT">
+        <ZoneNames>AIRP</ZoneNames>
+    </Region>
+</RegionInfo>

@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<VehicleInformation>
+    <VehicleData name="NOOSE_Vans">
+        <Vehicle model="riot">
+			<VehicleWeapon name="" flag=""/>
+            <Attributes>
+                <Mods type="engine" index="2"/>
+                <Mods type="roof" index="3"/>
+                <Health engine="1500" body="2000" petrol="1000"/>
+                <Livery index2="0" index="0"/>
+            </Attributes>
+        </Vehicle>
+        <Vehicle model="riot2">
+            <Attributes>
+                <Mods type="tyres" index="2"/>
+                <Mods type="engine" index="3"/>
+                <Health engine="1500" body="2000" petrol="1000"/>
+                <Livery set="Livery" index="0"/>
+            </Attributes>
+        </Vehicle>
+    </VehicleData>
+    <VehicleData name="LSPD_Vehicles">
+        <Vehicle model="police">
+			<VehicleWeapon name="" flag=""/>
+            <Attributes>
+                <Mods type="engine" index="2"/>
+                <Mods type="roof" index="3"/>
+                <Health engine="1500" body="2000" petrol="1000"/>
+                <Livery index2="0" index="0"/>
+            </Attributes>
+        </Vehicle>
+        <Vehicle model="policet">
+            <Attributes>
+                <Mods type="tyres" index="2"/>
+                <Mods type="engine" index="3"/>
+                <Health engine="1500" body="2000" petrol="1000"/>
+                <Livery set="Livery" index="0"/>
+            </Attributes>
+        </Vehicle>
+    </VehicleData>
+
+	<VehicleData name="NOOSE_HELI_4SEAT">
+		<Vehicle model="polmav">
+			<Attributes>
+				<Mods type="turbo" index="2"/>
+				<Mods type="engine" index="3"/>
+				<Health engine="1500" body="2000" petrol="1000"/>
+				<Livery set="0" index="0"/>
+			</Attributes>
+		</Vehicle>
+	</VehicleData>
+	<VehicleData name="NOOSE_HELI_6SEAT">
+		<Vehicle model="annihilator">
+			<Attributes>
+				<Mods type="turbo" index="2"/>
+				<Mods type="engine" index="3"/>
+				<Health engine="1500" body="2000" petrol="1000"/>
+				<Livery set="0" index="0"/>
+			</Attributes>
+		</Vehicle>
+	</VehicleData>
+</VehicleInformation>

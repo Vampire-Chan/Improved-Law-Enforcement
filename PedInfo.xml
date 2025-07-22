@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<PedInformation>
+<!--CombatAbility
+    Poor,
+    Average,
+    Professional
+ -->
+ <!--CombatMovement
+{
+    Stationary,
+    Defensive,
+    WillAdvance,
+    WillRetreat
+}-->
+ <!-- CombatRange
+{
+    Near,
+    Medium,
+    Far,
+    VeryFar
+}-->
+ <!--FiringPattern
+{
+    Default = 0u,
+    FullAuto = 3337513804u,
+    BurstFire = 3607063905u,
+    BurstInCover = 40051185u,
+    BurstFireDriveby = 3541198322u,
+    FromGround = 577037782u,
+    DelayFireByOneSec = 2055493265u,
+    SingleShot = 1566631136u,
+    BurstFirePistol = 2685983626u,
+    BurstFireSMG = 3507334638u,
+    BurstFireRifle = 2624893958u,
+    BurstFireMG = 3044263348u,
+    BurstFirePumpShotGun = 12239771u,
+    BurstFireHeli = 2437838959u,
+    BurstFireMicro = 1122960381u,
+    BurstFireBursts = 1122960381u,
+    BurstFireTank = 3804904049u,
+    TampaMortar = 2452873343u,
+    HunterBarrage = 2905356422u,
+    AkulaBarrage = 1392378214u,
+    ChernoBarrage = 703122589u,
+    Pounder2Barrage = 2228901467u
+}-->
+    <PedData name="LSPD_Police">
+        <Ped model="s_m_y_cop_01">
+            <Attributes health="200" armour="10" ability="Poor" movement="WillAdvance" combatrange="Medium" accuracy="50" hearingrange="70" seeingrange="90" juggernaut="false" firingpattern="BurstFire" smokeproof="false" rateoffire="400"/>
+            <!-- this portion can be randomized for the ped model, means each ped can be different-->
+			<ClothComponents>
+                <ClothComponent type="" typeindex="" index ="" proptype="" proptypeindex ="" pindex=""/>
+                <ClothComponent type="" typeindex="" index ="" proptype="" proptypeindex ="" pindex=""/>
+			</ClothComponents>
+        </Ped>
+        <Ped model="s_f_y_cop_01">
+            <Attributes health="200" armour="10" ability="Poor" movement="Defensive" combatrange="Medium" accuracy="40" hearingrange="70" seeingrange="70" juggernaut="false" firingpattern="BurstFire" smokeproof="false" rateoffire="200"/>
+            <!-- this portion can be randomized for the ped model, means each ped can be different-->
+			<ClothComponents>
+                <ClothComponent type="" typeindex="" index ="" proptype="" proptypeindex ="" pindex=""/>
+                <ClothComponent type="" typeindex="" index ="" proptype="" proptypeindex ="" pindex=""/>
+			</ClothComponents>
+        </Ped>
+    </PedData>
+    <PedData name="NOOSE_Soldiers">
+        <Ped model="s_m_y_swat_01">
+            <Attributes health="200" armour="100" ability="Professional" movement="WillAdvance" combatrange="Medium" accuracy="50" hearingrange="70" seeingrange="90" juggernaut="false" firingpattern="BurstFire" smokeproof="false" rateoffire="600"/>
+            <ClothComponents type="" index="" proptype="" pindex=""/>
+        </Ped>
+        <Ped model="s_m_y_blackops_03">
+            <Attributes health="200" armour="100" ability="Professional" movement="WillAdvance" combatrange="Far" accuracy="80" hearingrange="90" seeingrange="110" juggernaut="false" firingpattern="FullAuto" smokeproof="true" rateoffire="800"/>
+            <ClothComponents type="" index="" proptype="" pindex=""/>
+        </Ped>
+    </PedData>
+</PedInformation>

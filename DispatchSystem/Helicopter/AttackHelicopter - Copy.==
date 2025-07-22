@@ -1,0 +1,487 @@
+﻿using GTA;
+using GTA.Math;
+using GTA.Native;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+public class AttackHelicopter
+{
+    // --- Configuration Constants ---
+    private const float DETECTION_RADIUS = 300f;
+    private const float ATTACK_DISTANCE = 70f;
+    private const float PATROL_DISTANCE = 50f;
+    private const float SEARCH_DISTANCE = 80f;
+    private const float FLEE_DISTANCE = 500f;
+
+    // Heights for different operations
+    private const int ATTACK_HEIGHT = 50;
+    private const int PATROL_HEIGHT = 30;
+    private const int SEARCH_HEIGHT = 80;
+
+    // Speeds for different operations
+    private const float ATTACK_SPEED = 55;
+    private const float PATROL_SPEED = 40;
+    private const float SEARCH_SPEED = 30;
+    private const float FLEE_SPEED = 65;
+
+    // Update intervals
+    private const double STATE_UPDATE_INTERVAL = 0.5;
+
+    public enum HelicopterState
+    {
+        Idle,
+        ReadyToInitial,
+        GoToInitial,
+
+        ReadyToPatrol,
+        Patrol,
+
+        ReadyToEngage,
+        Engage,
+
+        ReadyToSearch,
+        Search,
+
+        ReadyToFlee,
+        Flee,
+
+            GoingToCrash,
+        ReadyToJump,
+
+    }
+
+
+    // --- Properties ---
+    public Vehicle Helicopter { get; }
+    public Ped Pilot { get; }
+    public HelicopterState CurrentState { get; private set; } = HelicopterState.Idle;
+    public bool IsArmed { get; private set; } = false;
+    public bool HasArmedPassengers { get; private set; } = false;
+    public Vector3 LastKnownPlayerPosition { get; private set; }
+    public float SearchRadius { get; set; } = 250f;
+    public bool IsAnnihilatorType = false; //use this flag for heli which are of annihilator/buzzard types. fixed miniguns i mean.
+    // --- Private Fields ---
+    private VehicleInformation _info;
+    private Vector3 _initialPosition;
+    private DateTime _lastStateUpdate = DateTime.MinValue;
+    private bool _hasReachedInitialPosition = false;
+    public List<Ped> Crew = new List<Ped>();
+    private bool _playerInVehicle = false;
+    private Random _random = new Random();
+
+    // --- Constructor ---
+    public AttackHelicopter(Vehicle helicopter, VehicleInformation info)
+    {
+        Helicopter = helicopter ?? throw new ArgumentNullException(nameof(helicopter));
+        _info = info ?? throw new ArgumentNullException(nameof(info));
+
+        if (Game.Player?.Character == null)
+        {
+            throw new InvalidOperationException("Player character not available");
+        }
+
+        LastKnownPlayerPosition = ImportantChecks.LastKnownLocation;
+        Pilot = Helicopter.Driver;
+        InitializeHelicopter();
+    }
+
+    // --- Initialization ---
+    private void InitializeHelicopter()
+    {
+        if (!IsHelicopterValid()) return;
+
+        DetermineWeaponCapabilities();
+        CurrentState = HelicopterState.ReadyToInitial;
+        _initialPosition = LastKnownPlayerPosition;
+        Crew = Helicopter.Passengers.ToList();
+        Helicopter.SetFoldingWingsDeployed(true);
+        Helicopter.SetArriveDistanceOverrideForVehiclePersuitAttack(50);
+
+    }
+
+    private void DetermineWeaponCapabilities()
+    {
+        if (!IsHelicopterValid()) return;
+
+        IsArmed = Pilot.GetVehicleWeaponHash(out var weap);
+       
+        
+        if (Game.Player?.Character == null || Game.Player.Wanted.WantedLevel == 0 ||
+            LastKnownPlayerPosition == Vector3.Zero || !HasAnyPassengers)
+        {
+            CurrentState = HelicopterState.Flee;
+        }
+
+        Pilot.CanSwitchWeapons = true;
+        Pilot.SetPedCycleVehicleWeapon();
+       
+        Pilot.SetCombatAttribute(CombatAttributes.UseVehicleAttack, false);
+        Pilot.SeeingRange = 200f;
+        _playerInVehicle = Game.Player.Character.IsInVehicle();
+    }
+
+    // --- Main Update Loop ---
+    public void Update()
+    {
+        if (!IsHelicopterValid()) return;
+
+        float heightAboveGround = GetHeightAboveGround();
+
+        if (ShouldFleeFromDamage())
+        {
+            CurrentState = HelicopterState.ReadyToFlee;
+        }
+
+        // CRASH LOGIC: dangerously low height during damage, initiate emergency exit
+        if (heightAboveGround < 5f && (ShouldFleeFromDamage() || !Helicopter.IsEngineRunning))
+        {
+            if (CurrentState != HelicopterState.GoingToCrash)
+                CurrentState = HelicopterState.GoingToCrash;
+        }
+
+        UpdatePlayerStatus();
+        UpdateHelicopterBehavior();
+
+        // If pilot is dead but crew is alive, trigger jump escape
+        if (!Pilot.Exists() || Pilot.IsDead)
+        {
+            if (HasAnyPassengers && CurrentState != HelicopterState.ReadyToJump)
+            {
+                CurrentState = HelicopterState.ReadyToJump;
+            }
+        }
+
+    }
+
+
+    private float GetHeightAboveGround()
+    {
+        OutputArgument groundZ = new OutputArgument();
+        Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD,
+            Helicopter.Position.X, Helicopter.Position.Y, Helicopter.Position.Z, groundZ);
+
+        return Helicopter.Position.Z - groundZ.GetResult<float>();
+    }
+
+    // --- Player Status Updates ---
+    private void UpdatePlayerStatus()
+    {
+        if (Game.Player?.Character == null) return;
+
+        _playerInVehicle = Game.Player.Character.IsInVehicle();
+        LastKnownPlayerPosition = Game.Player.Character.Position;
+    }
+
+    // --- Main State Management ---
+    private void UpdateHelicopterBehavior()
+    {
+        DateTime now = DateTime.Now;
+        if ((now - _lastStateUpdate).TotalSeconds < STATE_UPDATE_INTERVAL) return;
+        _lastStateUpdate = now;
+
+        int wantedLevel = Game.Player.Wanted.WantedLevel;
+        bool hasGreyStars = Game.Player.Wanted.HasGrayedOutStars;
+
+        // Critical override
+        if (wantedLevel == 0 || ShouldFleeFromDamage() || (!HasAnyPassengers && !IsArmed) && CurrentState != HelicopterState.Flee)
+        {
+            CurrentState = HelicopterState.ReadyToFlee;
+        }
+
+        float distanceToTarget = Helicopter.Position.DistanceTo(ImportantChecks.LastKnownLocation);
+        float currentSpeed = Helicopter.Speed; 
+
+        float heightAboveGround = GetHeightAboveGround();
+
+        HelperClass.Subtitle($"Heli State: {CurrentState} | HeliMIssion: {Helicopter.GetActiveMissionType()} | Dist: {distanceToTarget:F1}m | Speed: {(currentSpeed * 3.6f):F1}km/h\r\n | Height: {heightAboveGround:F1}m");
+
+        switch (CurrentState)
+        {
+            case HelicopterState.ReadyToInitial:
+                {
+                    Helicopter.IsSirenActive = true;
+                    DisableWeapons();
+
+                    Pilot.Task.StartHeliMission(
+                        Helicopter,
+                        _initialPosition,
+                        VehicleMissionType.GoTo,
+                        PATROL_SPEED,
+                        40,
+                        -1,
+                        PATROL_HEIGHT
+                    );
+
+                    CurrentState = HelicopterState.GoToInitial;
+                    break;
+                }
+
+            case HelicopterState.GoToInitial:
+                {
+                    float distance = Vector3.Distance(Helicopter.Position, _initialPosition);
+                    if (distance < 80f)
+                    {
+                        if (hasGreyStars)
+                            CurrentState = HelicopterState.ReadyToSearch;
+                        else if (wantedLevel >= 4 && IsArmed)
+                            CurrentState = HelicopterState.ReadyToEngage;
+                        else
+                            CurrentState = HelicopterState.ReadyToPatrol;
+                    }
+                    break;
+                }
+
+            case HelicopterState.ReadyToPatrol:
+                {
+                    Helicopter.IsSirenActive = true;
+                    DisableWeapons();
+
+                    if (_playerInVehicle)
+                        Pilot.Task.StartHeliMission(Helicopter, Game.Player.Character, VehicleMissionType.Follow, PATROL_SPEED, PATROL_DISTANCE, -1, PATROL_HEIGHT);
+                    else
+                        Pilot.Task.StartHeliMission(Helicopter, Game.Player.Character, VehicleMissionType.PoliceBehaviour, PATROL_SPEED, PATROL_DISTANCE, -1, PATROL_HEIGHT);
+
+                    CurrentState = HelicopterState.Patrol;
+                    break;
+                }
+
+            case HelicopterState.Patrol:
+                {
+                    if (hasGreyStars)
+                        CurrentState = HelicopterState.ReadyToSearch;
+                    else if (wantedLevel >= 4 && IsArmed)
+                        CurrentState = HelicopterState.ReadyToEngage;
+                    break;
+                }
+
+            case HelicopterState.ReadyToEngage:
+                {
+                    Helicopter.IsSirenActive = true;
+                    EnableWeapons();
+
+                    if (IsArmed)
+                        Pilot.Task.StartHeliMission(Helicopter, Game.Player.Character, VehicleMissionType.Attack, ATTACK_SPEED, ATTACK_DISTANCE, -1, ATTACK_HEIGHT);
+                    else
+                        Pilot.Task.StartHeliMission(Helicopter, Game.Player.Character, _random.Next(0, 2) == 0 ? VehicleMissionType.Circle : VehicleMissionType.GoTo, ATTACK_SPEED, 60, -1, ATTACK_HEIGHT);
+
+                    CurrentState = HelicopterState.Engage;
+                    break;
+                }
+
+            case HelicopterState.Engage:
+                {
+                    if (hasGreyStars)
+                        CurrentState = HelicopterState.ReadyToSearch;
+                    else if (wantedLevel < 4)
+                        CurrentState = HelicopterState.ReadyToPatrol;
+                    break;
+                }
+
+            case HelicopterState.ReadyToSearch:
+                {
+                    DisableWeapons();
+
+                    Vector3 searchPoint = GenerateSearchPoint();
+                    TaskSequence seq = new TaskSequence();
+                    seq.AddTask.StartHeliMission(Helicopter, searchPoint, VehicleMissionType.GoTo, SEARCH_SPEED, 0, -1, SEARCH_HEIGHT);
+                    seq.AddTask.StartHeliMission(Helicopter, searchPoint, VehicleMissionType.Circle, SEARCH_SPEED, 50f, -1, SEARCH_HEIGHT);
+                    seq.Close();
+
+                    Pilot.Task.PerformSequence(seq);
+                    CurrentState = HelicopterState.Search;
+                    break;
+                }
+
+            case HelicopterState.Search:
+                {
+                    if (!hasGreyStars && wantedLevel > 0)
+                    {
+                        if (wantedLevel >= 4 && IsArmed)
+                            CurrentState = HelicopterState.ReadyToEngage;
+                        else
+                            CurrentState = HelicopterState.ReadyToPatrol;
+                    }
+                    break;
+                }
+
+            case HelicopterState.ReadyToFlee:
+                {
+                    DisableWeapons();
+                    Helicopter.IsSirenActive = false;
+
+                    Vector3 fleeTarget = Helicopter.Position + Vector3.WorldUp * 80f + Helicopter.ForwardVector * FLEE_DISTANCE;
+
+                    Pilot.Task.StartHeliMission(Helicopter, fleeTarget, VehicleMissionType.Flee, FLEE_SPEED, 0, 80, -1);
+
+                    CurrentState = HelicopterState.Flee;
+                    break;
+                }
+
+            case HelicopterState.Flee:
+                {
+                    float healthPercentage = (float)Helicopter.Health / Helicopter.MaxHealth;
+                    if (wantedLevel > 0 && !ShouldFleeFromDamage() && healthPercentage > 0.8f)
+                    {
+                        CurrentState = HelicopterState.ReadyToInitial;
+                    }
+                    break;
+                }
+
+            case HelicopterState.GoingToCrash:
+                {
+                    // Allow crew to escape
+                    foreach (var p in Crew)
+                    {
+                        if (p == null || !p.Exists()) continue;
+                        p.SetCombatAttribute(CombatAttributes.CanLeaveVehicle, true);
+                        p.BlockPermanentEvents = false;
+                    }
+
+                    // Force landing gear
+                    Helicopter.LandingGearState = VehicleLandingGearState.Deployed;
+                    // Clear task so AI doesn't override
+                    Helicopter.ClearPrimaryTask();
+                    CurrentState = HelicopterState.Idle;
+                    break;
+                }
+
+            case HelicopterState.ReadyToJump:
+                {
+                    // Allow crew to leave and equip parachutes
+                    foreach (Ped soldier in Crew)
+                    {
+                        if (soldier == null || !soldier.Exists() || soldier.IsDead) continue;
+
+                        soldier.BlockPermanentEvents = false;
+                        soldier.SetCombatAttribute(CombatAttributes.CanLeaveVehicle, true);
+
+                        soldier.Weapons.Give(WeaponHash.Parachute, 1, true, true);
+
+                        World.GetSafePositionForPed(Helicopter.Position.Around(30), out var pos, GetSafePositionFlags.Default);
+                        TaskSequence ts = new TaskSequence();
+                        ts.AddTask.LeaveVehicle(LeaveVehicleFlags.BailOut);
+                        ts.AddTask.UseParachute();
+                        ts.AddTask.Pause(1000);
+                        ts.AddTask.ParachuteTo(pos);
+                        ts.AddTask.CombatHatedTargetsAroundPed(80);
+                        ts.Close();
+                        soldier.Task.PerformSequence(ts);
+                    }
+
+                    // Heli goes to idle (abandoned)
+                    CurrentState = HelicopterState.Idle;
+                    break;
+                }
+
+            case HelicopterState.Idle:
+            default:
+                break;
+        }
+    }
+
+
+    // --- Helper Methods ---
+    private Vector3 GenerateSearchPoint()
+    {
+        try
+        {
+            return HelperClass.FindSearchPointForHelicopter(
+                LastKnownPlayerPosition,
+                (int)SearchRadius,
+                SEARCH_HEIGHT,
+                true
+            );
+        }
+        catch
+        {
+            // Fallback search point calculation
+            Vector3 playerPos = LastKnownPlayerPosition;
+            float angle = (float)(_random.NextDouble() * 2 * Math.PI);
+            float distance = SearchRadius * (0.5f + (float)_random.NextDouble() * 0.5f);
+
+            return new Vector3(
+                playerPos.X + (float)Math.Cos(angle) * distance,
+                playerPos.Y + (float)Math.Sin(angle) * distance,
+                playerPos.Z + SEARCH_HEIGHT
+            );
+        }
+    }
+
+
+    private bool ShouldFleeFromDamage()
+    {
+        float healthPercentage = (float)Helicopter.Health / Helicopter.MaxHealth;
+        return healthPercentage < .6f;
+    }
+
+    // --- Weapon Management ---
+    private void DisableWeapons()
+    {
+        if (!IsHelicopterValid()) return;
+        foreach(var c in Crew)
+        {
+            c.SetCombatAttribute(CombatAttributes.UseVehicleAttack, false);
+
+            if (IsAnnihilatorType) c.SetCombatAttribute(CombatAttributes.ForceCheckAttackAngleForMountedGuns, false);
+        }
+    }
+
+    private void EnableWeapons()
+    {
+        if (!IsHelicopterValid()) return;
+
+        foreach (var c in Crew)
+        {
+            c.SetCombatAttribute(CombatAttributes.UseVehicleAttack, true);
+            if (IsAnnihilatorType) c.SetCombatAttribute(CombatAttributes.ForceCheckAttackAngleForMountedGuns, true);
+        }
+    }
+
+    // --- Utility Methods ---
+    public bool IsHelicopterValid()
+    {
+        return Helicopter != null && Helicopter.Exists() && !Helicopter.IsDead &&
+               Pilot != null && Pilot.Exists() && !Pilot.IsDead;
+    }
+
+    public bool HasAnyPassengers
+    {
+        get
+        {
+            if (Crew == null || Crew.Count == 0) return false;
+
+            foreach (Ped soldier in Crew)
+            {
+                if (soldier == null || !soldier.Exists() || soldier.IsDead)
+                    continue;
+
+                if (soldier.IsInVehicle(Helicopter))
+                    return true;
+            }
+
+            return false;
+        }
+    }
+
+    // --- Weapon Setup Methods ---
+    public void SetupWeaponForHelicopter(VehicleWeaponHash weaponHash)
+    {
+        if (!IsHelicopterValid()) return;
+
+        if (Pilot.GetVehicleWeaponHash(out VehicleWeaponHash currentWeaponHash))
+        {
+            if (currentWeaponHash == weaponHash) return;
+        }
+        Pilot.SetVehicleWeaponHash(weaponHash);
+    }
+
+    public bool ApplyWeaponAmmo(VehicleWeaponHash weaponHash, int ammoCount)
+    {
+        if (!IsHelicopterValid()) return false;
+
+        Helicopter.SetWeaponRestrictedAmmo((int)weaponHash, ammoCount);
+        return true;
+    }
+}
